@@ -6,7 +6,12 @@
   "scripts": {
     "dev": "vp dev",
     "build": "tsc -b && vp build",
-    "lint": "eslint .",
+    "lint": "vp check",
+    "lint:oxlint": "vp lint",
+    "check:oxfmt": "vp fmt --check",
+    "fix": "npm run lint -- --fix",
+    "fix:oxlint": "npm run lint:oxlint -- --fix",
+    "fix:oxfmt": "npm run check:oxfmt -- --write",
     "preview": "vp preview"
   },
   "dependencies": {
