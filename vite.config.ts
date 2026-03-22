@@ -22,5 +22,8 @@ export default defineConfig({
   fmt: {
     singleQuote: true,
   },
+  staged: {
+    '*': 'vp check --fix',
+  },
   plugins: [react()],
 });
