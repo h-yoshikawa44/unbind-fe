@@ -24,12 +24,12 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "typescript": "~5.9.3",
-    "vite": "npm:@voidzero-dev/vite-plus-core@latest",
-    "vite-plus": "latest"
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.1.13",
+    "vite-plus": "0.1.13"
   },
   "overrides": {
-    "vite": "npm:@voidzero-dev/vite-plus-core@latest",
-    "vitest": "npm:@voidzero-dev/vite-plus-test@latest"
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.1.13",
+    "vitest": "npm:@voidzero-dev/vite-plus-test@0.1.13"
   },
   "packageManager": "npm@11.12.0"
 }
