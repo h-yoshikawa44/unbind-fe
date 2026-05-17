@@ -1,101 +1,73 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from './assets/vite.svg';
-import heroImg from './assets/hero.png';
+import { useState, useEffect } from 'react';
+import type { Sentence, TokenWithAnalysis } from './types';
+import { fetchSentences, createSentence, updateSentence, deleteSentence } from './api';
+import { tokenize } from './tokenize';
+import { SentenceList } from './components/SentenceList';
+import { SentenceEditor } from './components/SentenceEditor';
+import { SentenceForm } from './components/SentenceForm';
 import './App.css';
 
+type View = { type: 'list' } | { type: 'add' } | { type: 'editor'; sentence: Sentence };
+
 function App() {
-  const [count, setCount] = useState(0);
+  const [sentences, setSentences] = useState<Sentence[]>([]);
+  const [view, setView] = useState<View>({ type: 'list' });
+
+  useEffect(() => {
+    fetchSentences().then(setSentences).catch(console.error);
+  }, []);
+
+  const handleAdd = async (text: string) => {
+    const id = crypto.randomUUID();
+    const tokens = tokenize(id, text);
+    const sentence = await createSentence(text, tokens, id);
+    setSentences((prev) => [...prev, sentence]);
+    setView({ type: 'editor', sentence });
+  };
+
+  const handleSave = async (sentence: Sentence, tokens: TokenWithAnalysis[]) => {
+    const updated = await updateSentence(sentence.id, tokens);
+    setSentences((prev) => prev.map((s) => (s.id === updated.id ? updated : s)));
+    setView({ type: 'editor', sentence: updated });
+  };
+
+  const handleDelete = async (id: string) => {
+    await deleteSentence(id);
+    setSentences((prev) => prev.filter((s) => s.id !== id));
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button className="counter" onClick={() => setCount((currentCount) => currentCount + 1)}>
-          Count is {count}
+    <div className="app">
+      <header className="app-header">
+        <button type="button" className="app-logo" onClick={() => setView({ type: 'list' })}>
+          Unbind
         </button>
-      </section>
+        <span className="app-subtitle">英文分解・翻訳アシスタント</span>
+      </header>
 
-      <div className="ticks"></div>
+      <main className="app-main">
+        {view.type === 'list' && (
+          <SentenceList
+            sentences={sentences}
+            onEdit={(s) => setView({ type: 'editor', sentence: s })}
+            onDelete={handleDelete}
+            onAdd={() => setView({ type: 'add' })}
+          />
+        )}
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        {view.type === 'add' && (
+          <SentenceForm onSubmit={handleAdd} onCancel={() => setView({ type: 'list' })} />
+        )}
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+        {view.type === 'editor' && (
+          <SentenceEditor
+            sentence={view.sentence}
+            onSave={(tokens) => handleSave(view.sentence, tokens)}
+            onBack={() => setView({ type: 'list' })}
+          />
+        )}
+      </main>
+    </div>
   );
 }
 
