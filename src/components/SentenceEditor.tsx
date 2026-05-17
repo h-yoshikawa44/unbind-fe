@@ -52,7 +52,7 @@ export function SentenceEditor({ sentence, onSave, onBack }: Props) {
       setActiveId(null);
       setIsDirty(true);
     } catch {
-      // non-adjacent selection — button is disabled, but guard just in case
+      // 非隣接トークンを選択した場合 — ボタンは無効化されているが念のためガード
     }
   };
 

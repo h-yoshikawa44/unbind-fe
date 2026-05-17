@@ -1,10 +1,9 @@
 /**
- * API layer for sentences.
+ * 英文データの APIレイヤー。
  *
- * Currently backed by localStorage. Replace each function body with a
- * real HTTP request (fetch/axios) when the backend is ready.
- * The function signatures and return types are designed to match
- * a typical REST API shape, so migration should be straightforward.
+ * 現在は localStorage をストレージとして使用している。
+ * バックエンド実装後は各関数の中身を実際の HTTP リクエスト (fetch/axios) に置き換える。
+ * 関数シグネチャと戻り値の型は REST API の形に合わせて設計しているため、移行は容易。
  */
 import type { Sentence, TokenWithAnalysis } from './types';
 
@@ -12,7 +11,7 @@ const STORAGE_KEY = 'unbind_sentences';
 
 function loadAll(): Sentence[] {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- localStorage data is trusted as Sentence[] until a real API with response validation is in place
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- 実APIへ移行するまでは localStorage のデータを Sentence[] として信頼する
     return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]') as Sentence[];
   } catch {
     return [];
@@ -23,12 +22,12 @@ function saveAll(sentences: Sentence[]): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(sentences));
 }
 
-/** GET /api/sentences */
+/** GET /api/sentences - 英文一覧を取得する */
 export function fetchSentences(): Promise<Sentence[]> {
   return Promise.resolve(loadAll());
 }
 
-/** POST /api/sentences */
+/** POST /api/sentences - 英文を新規作成する */
 export function createSentence(
   text: string,
   tokens: TokenWithAnalysis[],
@@ -41,7 +40,7 @@ export function createSentence(
   return Promise.resolve(sentence);
 }
 
-/** PUT /api/sentences/:id */
+/** PUT /api/sentences/:id - 英文のトークン分析データを更新する */
 export function updateSentence(id: string, tokens: TokenWithAnalysis[]): Promise<Sentence> {
   const sentences = loadAll();
   const idx = sentences.findIndex((s) => s.id === id);
@@ -56,7 +55,7 @@ export function updateSentence(id: string, tokens: TokenWithAnalysis[]): Promise
   return Promise.resolve(updated);
 }
 
-/** DELETE /api/sentences/:id */
+/** DELETE /api/sentences/:id - 英文を削除する */
 export function deleteSentence(id: string): Promise<void> {
   saveAll(loadAll().filter((s) => s.id !== id));
   return Promise.resolve();

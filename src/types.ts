@@ -23,7 +23,7 @@ export const PART_OF_SPEECH_LABELS: Record<PartOfSpeech, string> = {
   other: 'その他',
 };
 
-/** Ordered list of all PartOfSpeech values, used for type-safe iteration. */
+/** 型安全なイテレーションのために使用する PartOfSpeech の値一覧。 */
 export const PART_OF_SPEECH_VALUES: ReadonlyArray<PartOfSpeech> = [
   'noun',
   'pronoun',
@@ -37,18 +37,17 @@ export const PART_OF_SPEECH_VALUES: ReadonlyArray<PartOfSpeech> = [
   'other',
 ];
 
-/** Type guard for runtime validation of PartOfSpeech values. */
+/** PartOfSpeech 値のランタイム検証用タイプガード。 */
 export function isPartOfSpeech(value: string): value is PartOfSpeech {
   return value in PART_OF_SPEECH_LABELS;
 }
 
 /**
- * A word or phrase token within a sentence.
- * DB-ready: maps to the "tokens" table.
+ * 英文中の単語またはフレーズを表すトークン。
+ * DB対応: "tokens" テーブルに対応。
  *
- * memberTexts is present only for phrase tokens created by merging
- * adjacent words. It stores the original individual words so the
- * phrase can be split back later.
+ * memberTexts は隣接する単語を結合して作成したフレーズトークンのみに存在し、
+ * 元の個別単語を保持する（フレーズを分解して元に戻す際に使用）。
  */
 export interface Token {
   id: string;
@@ -59,8 +58,8 @@ export interface Token {
 }
 
 /**
- * Linguistic analysis data for a single token.
- * DB-ready: maps to the "token_analyses" table.
+ * トークン単体の言語分析データ。
+ * DB対応: "token_analyses" テーブルに対応。
  */
 export interface TokenAnalysis {
   tokenId: string;
@@ -72,15 +71,14 @@ export interface TokenAnalysis {
 }
 
 /**
- * Combined view of Token + TokenAnalysis used throughout the frontend.
- * When persisting to the backend, these will be split into their
- * respective tables.
+ * フロントエンド全体で使用する Token + TokenAnalysis の結合ビュー。
+ * バックエンドへ保存する際はそれぞれのテーブルに分割して扱う。
  */
 export type TokenWithAnalysis = Token & Omit<TokenAnalysis, 'tokenId'>;
 
 /**
- * An English sentence together with all its token analyses.
- * DB-ready: maps to the "sentences" table (tokens stored separately).
+ * 英文とそのトークン分析データをまとめたエンティティ。
+ * DB対応: "sentences" テーブルに対応（トークンは別テーブルで管理）。
  */
 export interface Sentence {
   id: string;

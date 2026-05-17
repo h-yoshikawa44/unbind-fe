@@ -1,13 +1,13 @@
 /**
- * Tokenization utilities for English sentences.
+ * 英文のトークン化ユーティリティ。
  *
- * Currently uses simple whitespace splitting. In the future this logic
- * could be moved server-side and use an NLP library (e.g. spaCy, NLTK)
- * to provide automatic POS tagging and smarter tokenization.
+ * 現在は空白文字で単純に分割している。
+ * 将来的にはサーバーサイドへ移行し、NLP ライブラリ (spaCy, NLTK など) を用いた
+ * 自動品詞タグ付けやより高度なトークン化を実現することを想定している。
  */
 import type { TokenWithAnalysis } from './types';
 
-/** Splits an English sentence into word tokens by whitespace. */
+/** 英文を空白文字で分割し、単語トークンの配列を返す。 */
 export function tokenize(sentenceId: string, text: string): TokenWithAnalysis[] {
   const regex = /\S+/g;
   const result: TokenWithAnalysis[] = [];
@@ -32,8 +32,8 @@ export function tokenize(sentenceId: string, text: string): TokenWithAnalysis[] 
 }
 
 /**
- * Merges a set of adjacent tokens into a single phrase token.
- * The provided ids must correspond to consecutive tokens in the list.
+ * 隣接する複数のトークンを1つのフレーズトークンに結合する。
+ * 指定した ids はトークンリスト内で連続している必要がある。
  */
 export function mergeTokens(tokens: TokenWithAnalysis[], ids: string[]): TokenWithAnalysis[] {
   const indices = ids.map((id) => tokens.findIndex((t) => t.id === id)).sort((a, b) => a - b);
@@ -48,7 +48,7 @@ export function mergeTokens(tokens: TokenWithAnalysis[], ids: string[]): TokenWi
   }
 
   const toMerge = tokens.slice(first, last + 1);
-  // Flatten in case any of the selected tokens are already phrases
+  // 選択トークンにすでにフレーズが含まれる場合は memberTexts を展開してフラット化する
   const memberTexts = toMerge.flatMap((t) => t.memberTexts ?? [t.text]);
 
   const phraseToken: TokenWithAnalysis = {
@@ -68,8 +68,8 @@ export function mergeTokens(tokens: TokenWithAnalysis[], ids: string[]): TokenWi
 }
 
 /**
- * Splits a phrase token back into individual word tokens.
- * Has no effect if the token is not a phrase (memberTexts is absent).
+ * フレーズトークンを元の個別単語トークンに分解する。
+ * フレーズでないトークン (memberTexts が存在しない) には何もしない。
  */
 export function splitToken(tokens: TokenWithAnalysis[], id: string): TokenWithAnalysis[] {
   const idx = tokens.findIndex((t) => t.id === id);
