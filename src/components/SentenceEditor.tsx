@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Sentence, TokenWithAnalysis } from '../types';
-import { PART_OF_SPEECH_LABELS, PART_OF_SPEECH_VALUES } from '../types';
+import { PART_OF_SPEECH_LABELS, PART_OF_SPEECH_VALUES, VERB_FORM_LABELS } from '../types';
 import { mergeTokens, splitToken } from '../tokenize';
 import { TokenAnalysisPanel } from './TokenAnalysisPanel';
 
@@ -150,6 +150,9 @@ export function SentenceEditor({ sentence, onSave, onBack }: Props) {
                   <span className="token-pos-badge" data-pos={token.partOfSpeech ?? undefined}>
                     {token.partOfSpeech ? PART_OF_SPEECH_LABELS[token.partOfSpeech] : '—'}
                   </span>
+                )}
+                {!isPhraseMode && token.partOfSpeech === 'verb' && token.verbForm && (
+                  <span className="token-verbform-badge">{VERB_FORM_LABELS[token.verbForm]}</span>
                 )}
                 {!isPhraseMode && token.wordMeaning && (
                   <span className="token-chip-meaning">{token.wordMeaning}</span>

@@ -21,6 +21,7 @@ export function tokenize(sentenceId: string, text: string): TokenWithAnalysis[] 
       text: match[0],
       order: order++,
       partOfSpeech: null,
+      verbForm: null,
       wordMeaning: '',
       idiomMeaning: '',
     });
@@ -56,6 +57,7 @@ export function mergeTokens(tokens: TokenWithAnalysis[], ids: string[]): TokenWi
     order: tokens[first].order,
     memberTexts,
     partOfSpeech: null,
+    verbForm: null,
     wordMeaning: '',
     idiomMeaning: '',
   };
@@ -80,10 +82,9 @@ export function splitToken(tokens: TokenWithAnalysis[], id: string): TokenWithAn
     text,
     order: token.order + i,
     partOfSpeech: null,
+    verbForm: null,
     wordMeaning: '',
     idiomMeaning: '',
-    literalTranslation: '',
-    naturalTranslation: '',
   }));
 
   return [...tokens.slice(0, idx), ...individual, ...tokens.slice(idx + 1)];
