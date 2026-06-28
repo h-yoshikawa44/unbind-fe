@@ -1,11 +1,6 @@
 import { useState } from 'react';
 import type { Sentence, TokenWithAnalysis } from '../types';
-import {
-  NOUN_FORM_LABELS,
-  PART_OF_SPEECH_LABELS,
-  PART_OF_SPEECH_VALUES,
-  VERB_FORM_LABELS,
-} from '../types';
+import { NOUN_FORM_LABELS, PART_OF_SPEECH_LABELS, VERB_FORM_LABELS } from '../types';
 import { mergeTokens, splitToken } from '../tokenize';
 import { TokenAnalysisPanel } from './TokenAnalysisPanel';
 
@@ -93,7 +88,6 @@ export function SentenceEditor({ sentence, onSave, onBack }: Props) {
 
   const canGroup = selected.size >= 2 && isSelectedAdjacent();
   const selectionInvalid = selected.size >= 2 && !isSelectedAdjacent();
-  const usedPos = PART_OF_SPEECH_VALUES.filter((pos) => tokens.some((t) => t.partOfSpeech === pos));
 
   return (
     <div className="editor">
@@ -174,16 +168,6 @@ export function SentenceEditor({ sentence, onSave, onBack }: Props) {
             );
           })}
         </div>
-        {!isPhraseMode && usedPos.length > 0 && (
-          <div className="pos-legend">
-            <span className="pos-legend-label">品詞凡例:</span>
-            {usedPos.map((pos) => (
-              <span key={pos} className="pos-legend-item" data-pos={pos}>
-                {PART_OF_SPEECH_LABELS[pos]}
-              </span>
-            ))}
-          </div>
-        )}
       </div>
 
       <div className="sentence-translation">
