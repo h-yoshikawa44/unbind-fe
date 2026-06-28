@@ -38,25 +38,27 @@ export function TokenAnalysisPanel({ token, onChange, onSplit }: Props) {
           />
         </div>
 
-        <div className="field-group">
-          <label className="field-label">単語としての意味</label>
-          <textarea
-            value={token.wordMeaning}
-            onChange={(e) => update('wordMeaning', e.target.value)}
-            placeholder="単語・フレーズの基本的な意味..."
-            rows={2}
-          />
-        </div>
-
-        <div className="field-group">
-          <label className="field-label">慣用句としての意味</label>
-          <textarea
-            value={token.idiomMeaning}
-            onChange={(e) => update('idiomMeaning', e.target.value)}
-            placeholder="慣用句・イディオムとして使われる場合の意味..."
-            rows={2}
-          />
-        </div>
+        {isPhrase ? (
+          <div className="field-group field-group--wide">
+            <label className="field-label">慣用句としての意味</label>
+            <textarea
+              value={token.idiomMeaning}
+              onChange={(e) => update('idiomMeaning', e.target.value)}
+              placeholder="慣用句・イディオムとして使われる場合の意味..."
+              rows={2}
+            />
+          </div>
+        ) : (
+          <div className="field-group field-group--wide">
+            <label className="field-label">単語としての意味</label>
+            <textarea
+              value={token.wordMeaning}
+              onChange={(e) => update('wordMeaning', e.target.value)}
+              placeholder="単語・フレーズの基本的な意味..."
+              rows={2}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -642,7 +642,8 @@
   gap: 6px;
 }
 
-.field-group--pos {
+.field-group--pos,
+.field-group--wide {
   grid-column: 1 / -1;
 }
 
