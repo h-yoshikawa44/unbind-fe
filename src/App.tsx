@@ -25,8 +25,12 @@ function App() {
     setView({ type: 'editor', sentence });
   };
 
-  const handleSave = async (sentence: Sentence, tokens: TokenWithAnalysis[]) => {
-    const updated = await updateSentence(sentence.id, tokens);
+  const handleSave = async (
+    sentence: Sentence,
+    tokens: TokenWithAnalysis[],
+    naturalTranslation: string,
+  ) => {
+    const updated = await updateSentence(sentence.id, tokens, naturalTranslation);
     setSentences((prev) => prev.map((s) => (s.id === updated.id ? updated : s)));
     setView({ type: 'editor', sentence: updated });
   };
@@ -62,7 +66,9 @@ function App() {
         {view.type === 'editor' && (
           <SentenceEditor
             sentence={view.sentence}
-            onSave={(tokens) => handleSave(view.sentence, tokens)}
+            onSave={(tokens, naturalTranslation) =>
+              handleSave(view.sentence, tokens, naturalTranslation)
+            }
             onBack={() => setView({ type: 'list' })}
           />
         )}

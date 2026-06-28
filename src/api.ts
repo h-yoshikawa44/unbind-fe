@@ -12,7 +12,9 @@ const STORAGE_KEY = 'unbind_sentences';
 function loadAll(): Sentence[] {
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- 実APIへ移行するまでは localStorage のデータを Sentence[] として信頼する
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]') as Sentence[];
+    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]') as Sentence[];
+    // naturalTranslation をトークンレベルから文章レベルへ移行したため、古いデータにはフィールドが存在しない。
+    return raw.map((s) => ({ ...s, naturalTranslation: s.naturalTranslation ?? '' }));
   } catch {
     return [];
   }
@@ -35,19 +37,31 @@ export function createSentence(
 ): Promise<Sentence> {
   const sentences = loadAll();
   const now = new Date().toISOString();
-  const sentence: Sentence = { id, text, tokens, createdAt: now, updatedAt: now };
+  const sentence: Sentence = {
+    id,
+    text,
+    tokens,
+    naturalTranslation: '',
+    createdAt: now,
+    updatedAt: now,
+  };
   saveAll([...sentences, sentence]);
   return Promise.resolve(sentence);
 }
 
 /** PUT /api/sentences/:id - 英文のトークン分析データを更新する */
-export function updateSentence(id: string, tokens: TokenWithAnalysis[]): Promise<Sentence> {
+export function updateSentence(
+  id: string,
+  tokens: TokenWithAnalysis[],
+  naturalTranslation: string,
+): Promise<Sentence> {
   const sentences = loadAll();
   const idx = sentences.findIndex((s) => s.id === id);
   if (idx === -1) return Promise.reject(new Error(`Sentence ${id} not found`));
   const updated: Sentence = {
     ...sentences[idx],
     tokens,
+    naturalTranslation,
     updatedAt: new Date().toISOString(),
   };
   sentences[idx] = updated;

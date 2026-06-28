@@ -67,7 +67,6 @@ export interface TokenAnalysis {
   wordMeaning: string;
   idiomMeaning: string;
   literalTranslation: string;
-  naturalTranslation: string;
 }
 
 /**
@@ -84,6 +83,7 @@ export interface Sentence {
   id: string;
   text: string;
   tokens: TokenWithAnalysis[];
+  naturalTranslation: string;
   createdAt: string;
   updatedAt: string;
 }

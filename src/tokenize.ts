@@ -24,7 +24,6 @@ export function tokenize(sentenceId: string, text: string): TokenWithAnalysis[] 
       wordMeaning: '',
       idiomMeaning: '',
       literalTranslation: '',
-      naturalTranslation: '',
     });
   }
 
@@ -61,7 +60,6 @@ export function mergeTokens(tokens: TokenWithAnalysis[], ids: string[]): TokenWi
     wordMeaning: '',
     idiomMeaning: '',
     literalTranslation: '',
-    naturalTranslation: '',
   };
 
   return [...tokens.slice(0, first), phraseToken, ...tokens.slice(last + 1)];

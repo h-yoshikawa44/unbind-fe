@@ -67,16 +67,6 @@ export function TokenAnalysisPanel({ token, onChange, onSplit }: Props) {
             rows={2}
           />
         </div>
-
-        <div className="field-group">
-          <label className="field-label">意訳</label>
-          <textarea
-            value={token.naturalTranslation}
-            onChange={(e) => update('naturalTranslation', e.target.value)}
-            placeholder="自然な日本語での意訳..."
-            rows={2}
-          />
-        </div>
       </div>
     </div>
   );
