@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Sentence, TokenWithAnalysis } from '../types';
+import { PART_OF_SPEECH_LABELS, PART_OF_SPEECH_VALUES } from '../types';
 import { mergeTokens, splitToken } from '../tokenize';
 import { TokenAnalysisPanel } from './TokenAnalysisPanel';
 
@@ -86,6 +87,7 @@ export function SentenceEditor({ sentence, onSave, onBack }: Props) {
 
   const canGroup = selected.size >= 2 && isSelectedAdjacent();
   const selectionInvalid = selected.size >= 2 && !isSelectedAdjacent();
+  const usedPos = PART_OF_SPEECH_VALUES.filter((pos) => tokens.some((t) => t.partOfSpeech === pos));
 
   return (
     <div className="editor">
@@ -143,13 +145,25 @@ export function SentenceEditor({ sentence, onSave, onBack }: Props) {
                 onClick={() => handleTokenClick(token.id)}
               >
                 <span className="token-chip-text">{token.text}</span>
-                {!isPhraseMode && token.partOfSpeech && (
-                  <span className="token-pos-badge">{token.partOfSpeech.slice(0, 3)}</span>
+                {!isPhraseMode && (
+                  <span className="token-pos-badge" data-pos={token.partOfSpeech ?? undefined}>
+                    {token.partOfSpeech ? PART_OF_SPEECH_LABELS[token.partOfSpeech] : '—'}
+                  </span>
                 )}
               </button>
             );
           })}
         </div>
+        {!isPhraseMode && usedPos.length > 0 && (
+          <div className="pos-legend">
+            <span className="pos-legend-label">品詞凡例:</span>
+            {usedPos.map((pos) => (
+              <span key={pos} className="pos-legend-item" data-pos={pos}>
+                {PART_OF_SPEECH_LABELS[pos]}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       {activeToken && !isPhraseMode ? (

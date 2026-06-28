@@ -357,10 +357,11 @@
    ===================================================== */
 .token-chip {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   gap: 5px;
-  padding: 6px 13px;
-  border-radius: 9999px;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
   border: 1.5px solid var(--border);
   background: var(--bg);
   color: var(--text-h);
@@ -440,12 +441,110 @@
   font-size: 0.6rem;
   font-family: system-ui, sans-serif;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  opacity: 0.75;
-  padding: 1px 5px;
-  background: rgba(128, 128, 128, 0.15);
+  padding: 2px 6px;
+  background: rgba(128, 128, 128, 0.12);
   border-radius: 3px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* 品詞ごとの色分け */
+.token-pos-badge[data-pos='noun'],
+.pos-legend-item[data-pos='noun'] {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.token-pos-badge[data-pos='pronoun'],
+.pos-legend-item[data-pos='pronoun'] {
+  background: rgba(99, 102, 241, 0.15);
+  color: #6366f1;
+}
+
+.token-pos-badge[data-pos='verb'],
+.pos-legend-item[data-pos='verb'] {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.token-pos-badge[data-pos='adjective'],
+.pos-legend-item[data-pos='adjective'] {
+  background: rgba(139, 92, 246, 0.15);
+  color: #8b5cf6;
+}
+
+.token-pos-badge[data-pos='adverb'],
+.pos-legend-item[data-pos='adverb'] {
+  background: rgba(20, 184, 166, 0.15);
+  color: #14b8a6;
+}
+
+.token-pos-badge[data-pos='preposition'],
+.pos-legend-item[data-pos='preposition'] {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.token-pos-badge[data-pos='conjunction'],
+.pos-legend-item[data-pos='conjunction'] {
+  background: rgba(236, 72, 153, 0.15);
+  color: #ec4899;
+}
+
+.token-pos-badge[data-pos='article'],
+.pos-legend-item[data-pos='article'] {
+  background: rgba(100, 116, 139, 0.15);
+  color: #64748b;
+}
+
+.token-pos-badge[data-pos='interjection'],
+.pos-legend-item[data-pos='interjection'] {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.token-pos-badge[data-pos='other'],
+.pos-legend-item[data-pos='other'] {
+  background: rgba(107, 114, 128, 0.15);
+  color: #6b7280;
+}
+
+/* アクティブ・フレーズチップ内のバッジは白系で上書き */
+.token-chip--active .token-pos-badge,
+.token-chip--phrase.token-chip--active .token-pos-badge {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* =====================================================
+   POS legend
+   ===================================================== */
+.pos-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.pos-legend-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.pos-legend-item {
+  font-size: 0.65rem;
+  font-family: system-ui, sans-serif;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: rgba(128, 128, 128, 0.12);
+  color: var(--text);
+  white-space: nowrap;
 }
 
 /* =====================================================
