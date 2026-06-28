@@ -6,7 +6,8 @@ export type PartOfSpeech =
   | 'adverb'
   | 'preposition'
   | 'conjunction'
-  | 'article'
+  | 'definite-article'
+  | 'indefinite-article'
   | 'interjection'
   | 'other';
 
@@ -18,7 +19,8 @@ export const PART_OF_SPEECH_LABELS: Record<PartOfSpeech, string> = {
   adverb: '副詞',
   preposition: '前置詞',
   conjunction: '接続詞',
-  article: '冠詞',
+  'definite-article': '定冠詞',
+  'indefinite-article': '不定冠詞',
   interjection: '感嘆詞',
   other: 'その他',
 };
@@ -32,7 +34,8 @@ export const PART_OF_SPEECH_VALUES: ReadonlyArray<PartOfSpeech> = [
   'adverb',
   'preposition',
   'conjunction',
-  'article',
+  'definite-article',
+  'indefinite-article',
   'interjection',
   'other',
 ];
