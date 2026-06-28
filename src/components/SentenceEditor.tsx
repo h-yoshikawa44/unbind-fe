@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import type { Sentence, TokenWithAnalysis } from '../types';
+import { NOUN_FORM_LABELS, PART_OF_SPEECH_LABELS, VERB_FORM_LABELS } from '../types';
 import { mergeTokens, splitToken } from '../tokenize';
 import { TokenAnalysisPanel } from './TokenAnalysisPanel';
 
 interface Props {
   sentence: Sentence;
-  onSave: (tokens: TokenWithAnalysis[]) => void;
+  onSave: (tokens: TokenWithAnalysis[], naturalTranslation: string) => void;
   onBack: () => void;
 }
 
 export function SentenceEditor({ sentence, onSave, onBack }: Props) {
   const [tokens, setTokens] = useState<TokenWithAnalysis[]>(sentence.tokens);
+  const [naturalTranslation, setNaturalTranslation] = useState(sentence.naturalTranslation);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [isPhraseMode, setIsPhraseMode] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -69,7 +71,7 @@ export function SentenceEditor({ sentence, onSave, onBack }: Props) {
   };
 
   const handleSave = () => {
-    onSave(tokens);
+    onSave(tokens, naturalTranslation);
     setIsDirty(false);
   };
 
@@ -143,13 +145,46 @@ export function SentenceEditor({ sentence, onSave, onBack }: Props) {
                 onClick={() => handleTokenClick(token.id)}
               >
                 <span className="token-chip-text">{token.text}</span>
-                {!isPhraseMode && token.partOfSpeech && (
-                  <span className="token-pos-badge">{token.partOfSpeech.slice(0, 3)}</span>
+                {!isPhraseMode && (
+                  <span className="token-pos-badge" data-pos={token.partOfSpeech ?? undefined}>
+                    {token.partOfSpeech ? PART_OF_SPEECH_LABELS[token.partOfSpeech] : '—'}
+                  </span>
+                )}
+                {!isPhraseMode && token.partOfSpeech === 'verb' && token.verbForm && (
+                  <span className="token-verbform-badge">{VERB_FORM_LABELS[token.verbForm]}</span>
+                )}
+                {!isPhraseMode && token.partOfSpeech === 'noun' && token.nounForm && (
+                  <span className="token-nounform-badge">{NOUN_FORM_LABELS[token.nounForm]}</span>
+                )}
+                {!isPhraseMode && token.wordMeaning && (
+                  <span className="token-chip-meaning">{token.wordMeaning}</span>
+                )}
+                {!isPhraseMode && token.idiomMeaning && (
+                  <span className="token-chip-meaning token-chip-meaning--idiom">
+                    慣: {token.idiomMeaning}
+                  </span>
                 )}
               </button>
             );
           })}
         </div>
+      </div>
+
+      <div className="sentence-translation">
+        <label className="sentence-translation-label" htmlFor="natural-translation">
+          意訳
+        </label>
+        <textarea
+          id="natural-translation"
+          className="sentence-translation-input"
+          value={naturalTranslation}
+          onChange={(e) => {
+            setNaturalTranslation(e.target.value);
+            setIsDirty(true);
+          }}
+          placeholder="文章全体の自然な日本語訳..."
+          rows={3}
+        />
       </div>
 
       {activeToken && !isPhraseMode ? (

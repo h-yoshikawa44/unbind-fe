@@ -1,5 +1,7 @@
 import type { TokenWithAnalysis } from '../types';
 import { PartOfSpeechSelect } from './PartOfSpeechSelect';
+import { VerbFormSelect } from './VerbFormSelect';
+import { NounFormSelect } from './NounFormSelect';
 
 interface Props {
   token: TokenWithAnalysis;
@@ -38,45 +40,41 @@ export function TokenAnalysisPanel({ token, onChange, onSplit }: Props) {
           />
         </div>
 
-        <div className="field-group">
-          <label className="field-label">単語としての意味</label>
-          <textarea
-            value={token.wordMeaning}
-            onChange={(e) => update('wordMeaning', e.target.value)}
-            placeholder="単語・フレーズの基本的な意味..."
-            rows={2}
-          />
-        </div>
+        {token.partOfSpeech === 'verb' && (
+          <div className="field-group field-group--pos">
+            <label className="field-label">変化形</label>
+            <VerbFormSelect value={token.verbForm} onChange={(v) => update('verbForm', v)} />
+          </div>
+        )}
 
-        <div className="field-group">
-          <label className="field-label">慣用句としての意味</label>
-          <textarea
-            value={token.idiomMeaning}
-            onChange={(e) => update('idiomMeaning', e.target.value)}
-            placeholder="慣用句・イディオムとして使われる場合の意味..."
-            rows={2}
-          />
-        </div>
+        {token.partOfSpeech === 'noun' && (
+          <div className="field-group field-group--pos">
+            <label className="field-label">数</label>
+            <NounFormSelect value={token.nounForm} onChange={(v) => update('nounForm', v)} />
+          </div>
+        )}
 
-        <div className="field-group">
-          <label className="field-label">直訳</label>
-          <textarea
-            value={token.literalTranslation}
-            onChange={(e) => update('literalTranslation', e.target.value)}
-            placeholder="文字通りの翻訳..."
-            rows={2}
-          />
-        </div>
-
-        <div className="field-group">
-          <label className="field-label">意訳</label>
-          <textarea
-            value={token.naturalTranslation}
-            onChange={(e) => update('naturalTranslation', e.target.value)}
-            placeholder="自然な日本語での意訳..."
-            rows={2}
-          />
-        </div>
+        {isPhrase ? (
+          <div className="field-group field-group--wide">
+            <label className="field-label">慣用句としての意味</label>
+            <textarea
+              value={token.idiomMeaning}
+              onChange={(e) => update('idiomMeaning', e.target.value)}
+              placeholder="慣用句・イディオムとして使われる場合の意味..."
+              rows={2}
+            />
+          </div>
+        ) : (
+          <div className="field-group field-group--wide">
+            <label className="field-label">単語としての意味</label>
+            <textarea
+              value={token.wordMeaning}
+              onChange={(e) => update('wordMeaning', e.target.value)}
+              placeholder="単語・フレーズの基本的な意味..."
+              rows={2}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
