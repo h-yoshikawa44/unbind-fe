@@ -150,6 +150,14 @@ export function SentenceEditor({ sentence, onSave, onBack }: Props) {
                     {token.partOfSpeech ? PART_OF_SPEECH_LABELS[token.partOfSpeech] : '—'}
                   </span>
                 )}
+                {!isPhraseMode && token.wordMeaning && (
+                  <span className="token-chip-meaning">{token.wordMeaning}</span>
+                )}
+                {!isPhraseMode && token.idiomMeaning && (
+                  <span className="token-chip-meaning token-chip-meaning--idiom">
+                    慣: {token.idiomMeaning}
+                  </span>
+                )}
               </button>
             );
           })}

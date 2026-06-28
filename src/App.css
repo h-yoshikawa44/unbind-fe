@@ -372,6 +372,7 @@
     border-color 0.15s,
     background 0.15s,
     color 0.15s;
+  max-width: 9rem;
 
   &:hover {
     border-color: var(--accent-border);
@@ -435,6 +436,10 @@
 
 .token-chip-text {
   line-height: 1;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .token-pos-badge {
@@ -509,11 +514,39 @@
   color: #6b7280;
 }
 
+/* 意味テキスト */
+.token-chip-meaning {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  font-size: 0.6rem;
+  font-family: system-ui, sans-serif;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.token-chip-meaning--idiom {
+  opacity: 0.7;
+}
+
 /* アクティブ・フレーズチップ内のバッジは白系で上書き */
 .token-chip--active .token-pos-badge,
 .token-chip--phrase.token-chip--active .token-pos-badge {
   background: rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.9);
+}
+
+.token-chip--active .token-chip-meaning,
+.token-chip--phrase.token-chip--active .token-chip-meaning {
+  color: rgba(255, 255, 255, 0.8);
+  opacity: 1;
+}
+
+.token-chip--phrase .token-chip-meaning {
+  color: var(--phrase-color);
+  opacity: 0.8;
 }
 
 /* =====================================================
