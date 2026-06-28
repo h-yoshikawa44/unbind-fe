@@ -45,6 +45,7 @@ export function isPartOfSpeech(value: string): value is PartOfSpeech {
 export type VerbForm =
   | 'base'
   | 'present'
+  | 'third-person-singular'
   | 'past'
   | 'present-progressive'
   | 'past-progressive'
@@ -59,6 +60,7 @@ export type VerbForm =
 export const VERB_FORM_LABELS: Record<VerbForm, string> = {
   base: '原形',
   present: '現在形',
+  'third-person-singular': '3単現形',
   past: '過去形',
   'present-progressive': '現在進行形',
   'past-progressive': '過去進行形',
@@ -75,6 +77,7 @@ export const VERB_FORM_LABELS: Record<VerbForm, string> = {
 export const VERB_FORM_VALUES: ReadonlyArray<VerbForm> = [
   'base',
   'present',
+  'third-person-singular',
   'past',
   'present-progressive',
   'past-progressive',
@@ -90,6 +93,21 @@ export const VERB_FORM_VALUES: ReadonlyArray<VerbForm> = [
 /** VerbForm 値のランタイム検証用タイプガード。 */
 export function isVerbForm(value: string): value is VerbForm {
   return value in VERB_FORM_LABELS;
+}
+
+export type NounForm = 'singular' | 'plural';
+
+export const NOUN_FORM_LABELS: Record<NounForm, string> = {
+  singular: '単数形',
+  plural: '複数形',
+};
+
+/** 型安全なイテレーションのために使用する NounForm の値一覧。 */
+export const NOUN_FORM_VALUES: ReadonlyArray<NounForm> = ['singular', 'plural'];
+
+/** NounForm 値のランタイム検証用タイプガード。 */
+export function isNounForm(value: string): value is NounForm {
+  return value in NOUN_FORM_LABELS;
 }
 
 /**
@@ -115,6 +133,7 @@ export interface TokenAnalysis {
   tokenId: string;
   partOfSpeech: PartOfSpeech | null;
   verbForm: VerbForm | null;
+  nounForm: NounForm | null;
   wordMeaning: string;
   idiomMeaning: string;
 }

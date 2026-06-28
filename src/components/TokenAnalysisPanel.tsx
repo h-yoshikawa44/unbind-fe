@@ -1,6 +1,7 @@
 import type { TokenWithAnalysis } from '../types';
 import { PartOfSpeechSelect } from './PartOfSpeechSelect';
 import { VerbFormSelect } from './VerbFormSelect';
+import { NounFormSelect } from './NounFormSelect';
 
 interface Props {
   token: TokenWithAnalysis;
@@ -43,6 +44,13 @@ export function TokenAnalysisPanel({ token, onChange, onSplit }: Props) {
           <div className="field-group field-group--pos">
             <label className="field-label">変化形</label>
             <VerbFormSelect value={token.verbForm} onChange={(v) => update('verbForm', v)} />
+          </div>
+        )}
+
+        {token.partOfSpeech === 'noun' && (
+          <div className="field-group field-group--pos">
+            <label className="field-label">数</label>
+            <NounFormSelect value={token.nounForm} onChange={(v) => update('nounForm', v)} />
           </div>
         )}
 
