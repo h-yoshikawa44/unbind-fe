@@ -23,7 +23,6 @@ export function tokenize(sentenceId: string, text: string): TokenWithAnalysis[] 
       partOfSpeech: null,
       wordMeaning: '',
       idiomMeaning: '',
-      literalTranslation: '',
     });
   }
 
@@ -59,7 +58,6 @@ export function mergeTokens(tokens: TokenWithAnalysis[], ids: string[]): TokenWi
     partOfSpeech: null,
     wordMeaning: '',
     idiomMeaning: '',
-    literalTranslation: '',
   };
 
   return [...tokens.slice(0, first), phraseToken, ...tokens.slice(last + 1)];

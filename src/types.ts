@@ -66,7 +66,6 @@ export interface TokenAnalysis {
   partOfSpeech: PartOfSpeech | null;
   wordMeaning: string;
   idiomMeaning: string;
-  literalTranslation: string;
 }
 
 /**
