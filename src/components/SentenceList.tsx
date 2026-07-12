@@ -1,4 +1,6 @@
 import type { Sentence } from '../types';
+import styles from './SentenceList.module.css';
+import buttonStyles from '../styles/button.module.css';
 
 interface Props {
   sentences: Sentence[];
@@ -9,35 +11,47 @@ interface Props {
 
 export function SentenceList({ sentences, onEdit, onDelete, onAdd }: Props) {
   return (
-    <div className="sentence-list">
-      <div className="list-header">
+    <div className={styles.sentenceList}>
+      <div className={styles.listHeader}>
         <h2>英文一覧</h2>
-        <button type="button" className="btn btn-primary" onClick={onAdd}>
+        <button
+          type="button"
+          className={`${buttonStyles.btn} ${buttonStyles.btnPrimary}`}
+          onClick={onAdd}
+        >
           + 英文を追加
         </button>
       </div>
 
       {sentences.length === 0 ? (
-        <div className="empty-state">
+        <div className={styles.emptyState}>
           <p>まだ英文が登録されていません。</p>
-          <button type="button" className="btn btn-primary" onClick={onAdd}>
+          <button
+            type="button"
+            className={`${buttonStyles.btn} ${buttonStyles.btnPrimary}`}
+            onClick={onAdd}
+          >
             最初の英文を追加する
           </button>
         </div>
       ) : (
-        <ul className="sentence-items">
+        <ul className={styles.sentenceItems}>
           {sentences.map((sentence) => (
-            <li key={sentence.id} className="sentence-item">
-              <button type="button" className="sentence-item-body" onClick={() => onEdit(sentence)}>
-                <p className="sentence-item-text">{sentence.text}</p>
-                <p className="sentence-item-meta">
+            <li key={sentence.id} className={styles.sentenceItem}>
+              <button
+                type="button"
+                className={styles.sentenceItemBody}
+                onClick={() => onEdit(sentence)}
+              >
+                <p className={styles.sentenceItemText}>{sentence.text}</p>
+                <p className={styles.sentenceItemMeta}>
                   {sentence.tokens.length} トークン ·{' '}
                   {new Date(sentence.updatedAt).toLocaleDateString('ja-JP')}
                 </p>
               </button>
               <button
                 type="button"
-                className="btn btn-danger btn-sm"
+                className={`${buttonStyles.btn} ${buttonStyles.btnDanger} ${buttonStyles.btnSm}`}
                 onClick={() => {
                   if (
                     confirm(
