@@ -1,16 +1,16 @@
 import { Link, Outlet } from '@tanstack/react-router';
-import '../App.css';
+import styles from './RootLayout.module.css';
 
 export function RootLayout() {
   return (
-    <div className="app">
-      <header className="app-header">
-        <Link to="/" className="app-logo">
+    <div className={styles.app}>
+      <header className={styles.appHeader}>
+        <Link to="/" className={styles.appLogo}>
           Unbind
         </Link>
-        <span className="app-subtitle">英文分解・翻訳アシスタント</span>
+        <span className={styles.appSubtitle}>英文分解・翻訳アシスタント</span>
       </header>
-      <main className="app-main">
+      <main className={styles.appMain}>
         <Outlet />
       </main>
     </div>
