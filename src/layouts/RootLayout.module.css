@@ -4,7 +4,7 @@
   min-height: 100svh;
 }
 
-.app-header {
+.appHeader {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -16,7 +16,7 @@
   z-index: 10;
 }
 
-.app-logo {
+.appLogo {
   all: unset;
   font-size: 1.25rem;
   font-weight: 700;
@@ -29,12 +29,12 @@
   }
 }
 
-.app-subtitle {
+.appSubtitle {
   font-size: 0.8rem;
   color: var(--text);
 }
 
-.app-main {
+.appMain {
   flex: 1;
   padding: 24px;
   max-width: 860px;

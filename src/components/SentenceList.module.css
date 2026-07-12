@@ -1,11 +1,11 @@
-.sentence-list {
+.sentenceList {
   background: var(--surface);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   overflow: hidden;
 }
 
-.list-header {
+.listHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -18,7 +18,7 @@
   }
 }
 
-.empty-state {
+.emptyState {
   padding: 56px 24px;
   text-align: center;
   color: var(--text);
@@ -28,13 +28,13 @@
   }
 }
 
-.sentence-items {
+.sentenceItems {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.sentence-item {
+.sentenceItem {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -46,7 +46,7 @@
   }
 }
 
-.sentence-item-body {
+.sentenceItemBody {
   all: unset;
   flex: 1;
   display: block;
@@ -61,12 +61,12 @@
     background: var(--accent-bg);
   }
 
-  &:hover .sentence-item-text {
+  &:hover .sentenceItemText {
     color: var(--accent);
   }
 }
 
-.sentence-item-text {
+.sentenceItemText {
   font-size: 0.9375rem;
   color: var(--text-h);
   margin: 0 0 4px;
@@ -77,7 +77,7 @@
   display: block;
 }
 
-.sentence-item-meta {
+.sentenceItemMeta {
   font-size: 0.78rem;
   color: var(--text);
   display: block;

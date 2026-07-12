@@ -1,4 +1,4 @@
-.analysis-panel {
+.analysisPanel {
   background: var(--surface);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
@@ -6,7 +6,7 @@
   padding: 20px 24px;
 }
 
-.analysis-panel-header {
+.analysisPanelHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -16,13 +16,13 @@
   border-bottom: 1px solid var(--border);
 }
 
-.analysis-token-info {
+.analysisTokenInfo {
   display: flex;
   align-items: baseline;
   gap: 10px;
 }
 
-.analysis-token-kind {
+.analysisTokenKind {
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -34,14 +34,14 @@
   padding: 2px 7px;
 }
 
-.analysis-token-text {
+.analysisTokenText {
   font-size: 1.375rem;
   font-family: Georgia, 'Times New Roman', serif;
   font-weight: 400;
   color: var(--text-h);
 }
 
-.analysis-fields {
+.analysisFields {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
@@ -51,18 +51,18 @@
   }
 }
 
-.field-group {
+.fieldGroup {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.field-group--pos,
-.field-group--wide {
+.fieldGroupPos,
+.fieldGroupWide {
   grid-column: 1 / -1;
 }
 
-.field-label {
+.fieldLabel {
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -70,8 +70,8 @@
   color: var(--text);
 }
 
-.field-group select,
-.field-group textarea {
+.fieldGroup select,
+.fieldGroup textarea {
   padding: 8px 12px;
   border: 1.5px solid var(--border);
   border-radius: var(--radius-md);

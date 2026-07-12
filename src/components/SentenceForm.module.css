@@ -1,4 +1,4 @@
-.sentence-form {
+.sentenceForm {
   background: var(--surface);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
@@ -10,7 +10,7 @@
   }
 }
 
-.sentence-input {
+.sentenceInput {
   width: 100%;
   padding: 12px;
   border: 1.5px solid var(--border);
@@ -34,7 +34,7 @@
   }
 }
 
-.form-actions {
+.formActions {
   display: flex;
   gap: 8px;
   justify-content: flex-end;

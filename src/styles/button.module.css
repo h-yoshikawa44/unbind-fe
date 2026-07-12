@@ -23,7 +23,7 @@
   }
 }
 
-.btn-primary {
+.btnPrimary {
   background: var(--accent);
   color: #fff;
 
@@ -32,7 +32,7 @@
   }
 }
 
-.btn-outline {
+.btnOutline {
   background: transparent;
   border-color: var(--border);
   color: var(--text-h);
@@ -43,7 +43,7 @@
   }
 }
 
-.btn-danger {
+.btnDanger {
   background: var(--danger);
   color: #fff;
 
@@ -52,13 +52,13 @@
   }
 }
 
-.btn-active {
+.btnActive {
   background: var(--accent-bg);
   border-color: var(--accent-border);
   color: var(--accent);
 }
 
-.btn-sm {
+.btnSm {
   padding: 4px 10px;
   font-size: 0.8rem;
 }
