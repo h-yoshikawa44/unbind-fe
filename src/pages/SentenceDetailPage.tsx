@@ -3,6 +3,7 @@ import { useNavigate, useParams } from '@tanstack/react-router';
 import type { Sentence, TokenWithAnalysis } from '../types';
 import { fetchSentences, updateSentence } from '../api';
 import { SentenceEditor } from '../components/SentenceEditor';
+import styles from './SentenceDetailPage.module.css';
 
 export function SentenceDetailPage() {
   const { sentenceId } = useParams({ from: '/sentences/$sentenceId' });
@@ -33,7 +34,7 @@ export function SentenceDetailPage() {
 
   if (!sentence) {
     return (
-      <div className="empty-hint">
+      <div className={styles.emptyHint}>
         <p>英文が見つかりません</p>
       </div>
     );

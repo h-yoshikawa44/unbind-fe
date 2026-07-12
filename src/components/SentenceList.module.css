@@ -1,0 +1,84 @@
+.sentenceList {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.listHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+
+  & h2 {
+    font-size: 1rem;
+    margin: 0;
+  }
+}
+
+.emptyState {
+  padding: 56px 24px;
+  text-align: center;
+  color: var(--text);
+
+  & p {
+    margin-bottom: 20px;
+  }
+}
+
+.sentenceItems {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sentenceItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 16px 4px 0;
+  border-bottom: 1px solid var(--border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.sentenceItemBody {
+  all: unset;
+  flex: 1;
+  display: block;
+  cursor: pointer;
+  padding: 14px 24px;
+  min-width: 0;
+  text-align: left;
+  border-radius: var(--radius-sm);
+  transition: background 0.1s;
+
+  &:hover {
+    background: var(--accent-bg);
+  }
+
+  &:hover .sentenceItemText {
+    color: var(--accent);
+  }
+}
+
+.sentenceItemText {
+  font-size: 0.9375rem;
+  color: var(--text-h);
+  margin: 0 0 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.1s;
+  display: block;
+}
+
+.sentenceItemMeta {
+  font-size: 0.78rem;
+  color: var(--text);
+  display: block;
+}

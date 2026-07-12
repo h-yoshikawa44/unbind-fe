@@ -3,6 +3,8 @@ import type { Sentence, TokenWithAnalysis } from '../types';
 import { NOUN_FORM_LABELS, PART_OF_SPEECH_LABELS, VERB_FORM_LABELS } from '../types';
 import { mergeTokens, splitToken } from '../tokenize';
 import { TokenAnalysisPanel } from './TokenAnalysisPanel';
+import styles from './SentenceEditor.module.css';
+import buttonStyles from '../styles/button.module.css';
 
 interface Props {
   sentence: Sentence;
@@ -90,77 +92,94 @@ export function SentenceEditor({ sentence, onSave, onBack }: Props) {
   const selectionInvalid = selected.size >= 2 && !isSelectedAdjacent();
 
   return (
-    <div className="editor">
-      <div className="editor-header">
-        <button type="button" className="btn btn-outline" onClick={handleBack}>
+    <div className={styles.editor}>
+      <div className={styles.editorHeader}>
+        <button
+          type="button"
+          className={`${buttonStyles.btn} ${buttonStyles.btnOutline}`}
+          onClick={handleBack}
+        >
           ← 戻る
         </button>
-        <p className="editor-title">{sentence.text}</p>
-        <button type="button" className="btn btn-primary" onClick={handleSave} disabled={!isDirty}>
+        <p className={styles.editorTitle}>{sentence.text}</p>
+        <button
+          type="button"
+          className={`${buttonStyles.btn} ${buttonStyles.btnPrimary}`}
+          onClick={handleSave}
+          disabled={!isDirty}
+        >
           保存
         </button>
       </div>
 
-      <div className="token-area">
-        <div className="token-toolbar">
-          <span className="toolbar-label">フレーズ操作:</span>
+      <div className={styles.tokenArea}>
+        <div className={styles.tokenToolbar}>
+          <span className={styles.toolbarLabel}>フレーズ操作:</span>
           <button
             type="button"
-            className={`btn btn-sm ${isPhraseMode ? 'btn-active' : 'btn-outline'}`}
+            className={`${buttonStyles.btn} ${buttonStyles.btnSm} ${isPhraseMode ? buttonStyles.btnActive : buttonStyles.btnOutline}`}
             onClick={togglePhraseMode}
           >
             {isPhraseMode ? '選択中...' : 'フレーズを作成'}
           </button>
           {isPhraseMode && canGroup && (
-            <button type="button" className="btn btn-sm btn-primary" onClick={handleGroup}>
+            <button
+              type="button"
+              className={`${buttonStyles.btn} ${buttonStyles.btnSm} ${buttonStyles.btnPrimary}`}
+              onClick={handleGroup}
+            >
               グループ化
             </button>
           )}
           {isPhraseMode && selectionInvalid && (
-            <span className="toolbar-warning">隣接したトークンのみグループ化できます</span>
+            <span className={styles.toolbarWarning}>隣接したトークンのみグループ化できます</span>
           )}
           {isPhraseMode && selected.size === 0 && (
-            <span className="toolbar-hint">グループ化したいトークンを選択してください</span>
+            <span className={styles.toolbarHint}>グループ化したいトークンを選択してください</span>
           )}
         </div>
 
-        <div className="token-list" role="list">
+        <div className={styles.tokenList} role="list">
           {tokens.map((token) => {
             const isPhrase = (token.memberTexts?.length ?? 0) > 1;
             const isActive = activeId === token.id;
             const isSelected = selected.has(token.id);
 
-            const classes = ['token-chip'];
-            if (isPhrase) classes.push('token-chip--phrase');
-            if (isActive) classes.push('token-chip--active');
-            if (isSelected) classes.push('token-chip--selected');
-            const className = classes.join(' ');
+            const chipClasses = [styles.tokenChip];
+            if (isPhrase) chipClasses.push(styles.tokenChipPhrase);
+            if (isActive) chipClasses.push(styles.tokenChipActive);
+            if (isSelected) chipClasses.push(styles.tokenChipSelected);
+            const chipClassName = chipClasses.join(' ');
 
             return (
               <button
                 key={token.id}
                 type="button"
                 role="listitem"
-                className={className}
+                className={chipClassName}
                 onClick={() => handleTokenClick(token.id)}
               >
-                <span className="token-chip-text">{token.text}</span>
+                <span className={styles.tokenChipText}>{token.text}</span>
                 {!isPhraseMode && (
-                  <span className="token-pos-badge" data-pos={token.partOfSpeech ?? undefined}>
+                  <span className={styles.tokenPosBadge} data-pos={token.partOfSpeech ?? undefined}>
                     {token.partOfSpeech ? PART_OF_SPEECH_LABELS[token.partOfSpeech] : '—'}
                   </span>
                 )}
                 {!isPhraseMode && token.partOfSpeech === 'verb' && token.verbForm && (
-                  <span className="token-verbform-badge">{VERB_FORM_LABELS[token.verbForm]}</span>
+                  <span className={styles.tokenVerbformBadge}>
+                    {VERB_FORM_LABELS[token.verbForm]}
+                  </span>
                 )}
                 {!isPhraseMode && token.partOfSpeech === 'noun' && token.nounForm && (
-                  <span className="token-nounform-badge">{NOUN_FORM_LABELS[token.nounForm]}</span>
+                  <span className={styles.tokenNounformBadge}>
+                    {NOUN_FORM_LABELS[token.nounForm]}
+                  </span>
                 )}
                 {!isPhraseMode && token.wordMeaning && (
-                  <span className="token-chip-meaning">{token.wordMeaning}</span>
+                  <span className={styles.tokenChipMeaning}>{token.wordMeaning}</span>
                 )}
                 {!isPhraseMode && token.idiomMeaning && (
-                  <span className="token-chip-meaning token-chip-meaning--idiom">
+                  <span className={`${styles.tokenChipMeaning} ${styles.tokenChipMeaningIdiom}`}>
                     慣: {token.idiomMeaning}
                   </span>
                 )}
@@ -170,13 +189,13 @@ export function SentenceEditor({ sentence, onSave, onBack }: Props) {
         </div>
       </div>
 
-      <div className="sentence-translation">
-        <label className="sentence-translation-label" htmlFor="natural-translation">
+      <div className={styles.sentenceTranslation}>
+        <label className={styles.sentenceTranslationLabel} htmlFor="natural-translation">
           意訳
         </label>
         <textarea
           id="natural-translation"
-          className="sentence-translation-input"
+          className={styles.sentenceTranslationInput}
           value={naturalTranslation}
           onChange={(e) => {
             setNaturalTranslation(e.target.value);
@@ -199,7 +218,7 @@ export function SentenceEditor({ sentence, onSave, onBack }: Props) {
         />
       ) : (
         !isPhraseMode && (
-          <div className="empty-hint">
+          <div className={styles.emptyHint}>
             <p>トークンをクリックして分析情報を入力できます</p>
           </div>
         )

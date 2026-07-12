@@ -2,6 +2,8 @@ import type { TokenWithAnalysis } from '../types';
 import { PartOfSpeechSelect } from './PartOfSpeechSelect';
 import { VerbFormSelect } from './VerbFormSelect';
 import { NounFormSelect } from './NounFormSelect';
+import styles from './TokenAnalysisPanel.module.css';
+import buttonStyles from '../styles/button.module.css';
 
 interface Props {
   token: TokenWithAnalysis;
@@ -18,22 +20,26 @@ export function TokenAnalysisPanel({ token, onChange, onSplit }: Props) {
   const isPhrase = (token.memberTexts?.length ?? 0) > 1;
 
   return (
-    <div className="analysis-panel">
-      <div className="analysis-panel-header">
-        <div className="analysis-token-info">
-          <span className="analysis-token-kind">{isPhrase ? 'フレーズ' : '単語'}</span>
-          <span className="analysis-token-text">{token.text}</span>
+    <div className={styles.analysisPanel}>
+      <div className={styles.analysisPanelHeader}>
+        <div className={styles.analysisTokenInfo}>
+          <span className={styles.analysisTokenKind}>{isPhrase ? 'フレーズ' : '単語'}</span>
+          <span className={styles.analysisTokenText}>{token.text}</span>
         </div>
         {isPhrase && onSplit && (
-          <button type="button" className="btn btn-outline btn-sm" onClick={onSplit}>
+          <button
+            type="button"
+            className={`${buttonStyles.btn} ${buttonStyles.btnOutline} ${buttonStyles.btnSm}`}
+            onClick={onSplit}
+          >
             分解する
           </button>
         )}
       </div>
 
-      <div className="analysis-fields">
-        <div className="field-group field-group--pos">
-          <label className="field-label">品詞</label>
+      <div className={styles.analysisFields}>
+        <div className={`${styles.fieldGroup} ${styles.fieldGroupPos}`}>
+          <label className={styles.fieldLabel}>品詞</label>
           <PartOfSpeechSelect
             value={token.partOfSpeech}
             onChange={(v) => update('partOfSpeech', v)}
@@ -41,22 +47,22 @@ export function TokenAnalysisPanel({ token, onChange, onSplit }: Props) {
         </div>
 
         {token.partOfSpeech === 'verb' && (
-          <div className="field-group field-group--pos">
-            <label className="field-label">変化形</label>
+          <div className={`${styles.fieldGroup} ${styles.fieldGroupPos}`}>
+            <label className={styles.fieldLabel}>変化形</label>
             <VerbFormSelect value={token.verbForm} onChange={(v) => update('verbForm', v)} />
           </div>
         )}
 
         {token.partOfSpeech === 'noun' && (
-          <div className="field-group field-group--pos">
-            <label className="field-label">数</label>
+          <div className={`${styles.fieldGroup} ${styles.fieldGroupPos}`}>
+            <label className={styles.fieldLabel}>数</label>
             <NounFormSelect value={token.nounForm} onChange={(v) => update('nounForm', v)} />
           </div>
         )}
 
         {isPhrase ? (
-          <div className="field-group field-group--wide">
-            <label className="field-label">慣用句としての意味</label>
+          <div className={`${styles.fieldGroup} ${styles.fieldGroupWide}`}>
+            <label className={styles.fieldLabel}>慣用句としての意味</label>
             <textarea
               value={token.idiomMeaning}
               onChange={(e) => update('idiomMeaning', e.target.value)}
@@ -65,8 +71,8 @@ export function TokenAnalysisPanel({ token, onChange, onSplit }: Props) {
             />
           </div>
         ) : (
-          <div className="field-group field-group--wide">
-            <label className="field-label">単語としての意味</label>
+          <div className={`${styles.fieldGroup} ${styles.fieldGroupWide}`}>
+            <label className={styles.fieldLabel}>単語としての意味</label>
             <textarea
               value={token.wordMeaning}
               onChange={(e) => update('wordMeaning', e.target.value)}

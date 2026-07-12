@@ -1,0 +1,364 @@
+/* =====================================================
+   Editor layout
+   ===================================================== */
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.editorHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  padding: 16px 20px;
+}
+
+.editorTitle {
+  flex: 1;
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--text-h);
+  line-height: 1.6;
+  font-style: italic;
+  padding-top: 6px;
+  min-width: 0;
+  word-break: break-word;
+}
+
+/* =====================================================
+   Token area
+   ===================================================== */
+.tokenArea {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.tokenToolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.toolbarLabel {
+  font-size: 0.78rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.toolbarWarning {
+  font-size: 0.78rem;
+  color: var(--danger);
+}
+
+.toolbarHint {
+  font-size: 0.78rem;
+  color: var(--text);
+}
+
+.tokenList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+/* =====================================================
+   Token chips
+   ===================================================== */
+.tokenChip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  font-size: 1rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    color 0.15s;
+  max-width: 9rem;
+
+  &:hover {
+    border-color: var(--accent-border);
+    background: var(--accent-bg);
+    color: var(--accent);
+  }
+}
+
+.tokenChipPhrase {
+  border-style: dashed;
+  border-color: var(--phrase-border);
+  background: var(--phrase-bg);
+  color: var(--phrase-color);
+  border-radius: var(--radius-md);
+
+  &:hover {
+    background: var(--phrase-bg);
+    border-color: var(--phrase-color);
+    color: var(--phrase-color);
+    filter: brightness(0.9);
+  }
+}
+
+.tokenChipActive {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+
+  &:hover {
+    background: var(--accent);
+    color: #fff;
+    filter: brightness(1.1);
+  }
+}
+
+.tokenChipPhrase.tokenChipActive {
+  background: var(--phrase-color);
+  border-color: var(--phrase-color);
+  border-style: solid;
+  color: #fff;
+
+  &:hover {
+    background: var(--phrase-color);
+    color: #fff;
+    filter: brightness(1.1);
+  }
+}
+
+.tokenChipSelected {
+  background: var(--select-bg);
+  border-color: var(--select-border);
+  color: var(--select-color);
+
+  &:hover {
+    background: var(--select-bg);
+    border-color: var(--select-color);
+    color: var(--select-color);
+    filter: brightness(0.95);
+  }
+}
+
+.tokenChipText {
+  line-height: 1;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tokenPosBadge {
+  font-size: 0.6rem;
+  font-family: system-ui, sans-serif;
+  font-weight: 700;
+  padding: 2px 6px;
+  background: rgba(128, 128, 128, 0.12);
+  border-radius: 3px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* 品詞ごとの色分け */
+.tokenPosBadge[data-pos='noun'] {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.tokenPosBadge[data-pos='pronoun'] {
+  background: rgba(99, 102, 241, 0.15);
+  color: #6366f1;
+}
+
+.tokenPosBadge[data-pos='verb'] {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.tokenPosBadge[data-pos='adjective'] {
+  background: rgba(139, 92, 246, 0.15);
+  color: #8b5cf6;
+}
+
+.tokenPosBadge[data-pos='adverb'] {
+  background: rgba(20, 184, 166, 0.15);
+  color: #14b8a6;
+}
+
+.tokenPosBadge[data-pos='preposition'] {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.tokenPosBadge[data-pos='conjunction'] {
+  background: rgba(236, 72, 153, 0.15);
+  color: #ec4899;
+}
+
+.tokenPosBadge[data-pos='definite-article'],
+.tokenPosBadge[data-pos='indefinite-article'] {
+  background: rgba(100, 116, 139, 0.15);
+  color: #64748b;
+}
+
+.tokenPosBadge[data-pos='interjection'] {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.tokenPosBadge[data-pos='other'] {
+  background: rgba(107, 114, 128, 0.15);
+  color: #6b7280;
+}
+
+/* 動詞変化形バッジ */
+.tokenVerbformBadge {
+  font-size: 0.6rem;
+  font-family: system-ui, sans-serif;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(239, 68, 68, 0.08);
+  color: #ef4444;
+  white-space: nowrap;
+  width: 100%;
+  text-align: center;
+}
+
+.tokenChipActive .tokenVerbformBadge,
+.tokenChipPhrase.tokenChipActive .tokenVerbformBadge {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 名詞の数バッジ */
+.tokenNounformBadge {
+  font-size: 0.6rem;
+  font-family: system-ui, sans-serif;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(59, 130, 246, 0.08);
+  color: #3b82f6;
+  white-space: nowrap;
+  width: 100%;
+  text-align: center;
+}
+
+.tokenChipActive .tokenNounformBadge,
+.tokenChipPhrase.tokenChipActive .tokenNounformBadge {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 意味テキスト */
+.tokenChipMeaning {
+  width: 100%;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-align: center;
+  font-size: 0.6rem;
+  font-family: system-ui, sans-serif;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.tokenChipMeaningIdiom {
+  opacity: 0.7;
+}
+
+/* アクティブ・フレーズチップ内のバッジは白系で上書き */
+.tokenChipActive .tokenPosBadge,
+.tokenChipPhrase.tokenChipActive .tokenPosBadge {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.tokenChipActive .tokenChipMeaning,
+.tokenChipPhrase.tokenChipActive .tokenChipMeaning {
+  color: rgba(255, 255, 255, 0.8);
+  opacity: 1;
+}
+
+.tokenChipPhrase .tokenChipMeaning {
+  color: var(--phrase-color);
+  opacity: 0.8;
+}
+
+/* =====================================================
+   Sentence translation
+   ===================================================== */
+.sentenceTranslation {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sentenceTranslationLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+}
+
+.sentenceTranslationInput {
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  font-family: inherit;
+  color: var(--text-h);
+  background: var(--bg);
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  transition: border-color 0.15s;
+
+  &:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  &::placeholder {
+    color: var(--text);
+    opacity: 0.5;
+  }
+}
+
+/* =====================================================
+   Empty hint
+   ===================================================== */
+.emptyHint {
+  text-align: center;
+  padding: 36px 24px;
+  color: var(--text);
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 2px dashed var(--border);
+  font-size: 0.9rem;
+
+  & p {
+    margin: 0;
+  }
+}
