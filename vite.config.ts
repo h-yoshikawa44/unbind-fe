@@ -23,9 +23,11 @@ export default defineConfig({
       // 明示的な React インポートは不要なのでオフ
       'react/react-in-jsx-scope': 'off',
     },
+    ignorePatterns: ['generated/**'],
   },
   fmt: {
     singleQuote: true,
+    ignorePatterns: ['generated/**'],
   },
   staged: {
     '*': 'vp check --fix',
