@@ -14,7 +14,7 @@ interface Props {
 export function TokenAnalysisPanel({ token, onChange, onSplit }: Props) {
   // Generic helper so TypeScript can verify field/value compatibility
   function update<K extends keyof TokenWithAnalysis>(field: K, value: TokenWithAnalysis[K]): void {
-    onChange({ ...token, [field]: value } as TokenWithAnalysis);
+    onChange({ ...token, [field]: value });
   }
 
   const isPhrase = (token.memberTexts?.length ?? 0) > 1;
