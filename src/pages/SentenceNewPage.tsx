@@ -1,7 +1,7 @@
 import { useNavigate } from '@tanstack/react-router';
-import { createSentence } from '../api';
-import { SentenceForm } from '../components/SentenceForm';
-import { tokenize } from '../tokenize';
+import { createSentence } from '@/api';
+import { SentenceForm } from '@/components/SentenceForm';
+import { tokenize } from '@/tokenize';
 
 export function SentenceNewPage() {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
-import { PART_OF_SPEECH_LABELS, PART_OF_SPEECH_VALUES, isPartOfSpeech } from '../types';
-import type { PartOfSpeech } from '../types';
+import { PART_OF_SPEECH_LABELS, PART_OF_SPEECH_VALUES, isPartOfSpeech } from '@/types';
+import type { PartOfSpeech } from '@/types';
 
 interface Props {
   value: PartOfSpeech | null;

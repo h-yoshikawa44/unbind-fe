@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import styles from './SentenceForm.module.css';
-import buttonStyles from '../styles/button.module.css';
+import styles from '@/components/SentenceForm.module.css';
+import buttonStyles from '@/styles/button.module.css';
 
 interface Props {
   onSubmit: (text: string) => void;

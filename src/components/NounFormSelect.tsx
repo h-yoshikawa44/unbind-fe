@@ -1,5 +1,5 @@
-import { NOUN_FORM_LABELS, NOUN_FORM_VALUES, isNounForm } from '../types';
-import type { NounForm } from '../types';
+import { NOUN_FORM_LABELS, NOUN_FORM_VALUES, isNounForm } from '@/types';
+import type { NounForm } from '@/types';
 
 interface Props {
   value: NounForm | null;

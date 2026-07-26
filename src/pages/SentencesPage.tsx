@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import type { Sentence } from '../types';
-import { deleteSentence, fetchSentences } from '../api';
-import { SentenceList } from '../components/SentenceList';
+import type { Sentence } from '@/types';
+import { deleteSentence, fetchSentences } from '@/api';
+import { SentenceList } from '@/components/SentenceList';
 
 export function SentencesPage() {
   const [sentences, setSentences] = useState<Sentence[]>([]);

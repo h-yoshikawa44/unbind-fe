@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
-import type { Sentence, TokenWithAnalysis } from '../types';
-import { fetchSentences, updateSentence } from '../api';
-import { SentenceEditor } from '../components/SentenceEditor';
-import styles from './SentenceDetailPage.module.css';
+import type { Sentence, TokenWithAnalysis } from '@/types';
+import { fetchSentences, updateSentence } from '@/api';
+import { SentenceEditor } from '@/components/SentenceEditor';
+import styles from '@/pages/SentenceDetailPage.module.css';
 
 export function SentenceDetailPage() {
   const { sentenceId } = useParams({ from: '/sentences/$sentenceId' });
