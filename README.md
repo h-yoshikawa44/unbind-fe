@@ -4,7 +4,7 @@
 
 base
 
-- Node.js: 24.14.0
+- Node.js: 24.18.0
 - TypeScript: 5.9.3
 - React: 19.2.4
 
