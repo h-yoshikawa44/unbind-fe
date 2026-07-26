@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { FormEvent } from 'react';
+import type { SyntheticEvent } from 'react';
 import styles from '@/components/SentenceForm.module.css';
 import buttonStyles from '@/styles/button.module.css';
 
@@ -11,7 +11,7 @@ interface Props {
 export function SentenceForm({ onSubmit, onCancel }: Props) {
   const [text, setText] = useState('');
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
     e.preventDefault();
     const trimmed = text.trim();
     if (!trimmed) return;
