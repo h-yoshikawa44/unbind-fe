@@ -30,7 +30,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
     "npm-run-all2": "^9.0.2",
-    "typescript": "~5.9.3",
+    "typescript": "^6.0.3",
     "vite": "npm:@voidzero-dev/vite-plus-core@0.2.5",
     "vite-plus": "^0.2.5"
   },

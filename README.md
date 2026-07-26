@@ -5,7 +5,7 @@
 base
 
 - Node.js: 24.18.0
-- TypeScript: 5.9.3
+- TypeScript: 6.0.3
 - React: 19.2.7
 
 Other major libraries
