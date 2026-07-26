@@ -1,0 +1,75 @@
+.tagInput {
+  width: 100%;
+}
+
+.tagChips {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  transition: border-color 0.15s;
+
+  &:focus-within {
+    border-color: var(--accent);
+  }
+}
+
+.tagChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 4px 3px 10px;
+  border-radius: 999px;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  color: var(--accent);
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+
+.tagChipText {
+  white-space: nowrap;
+}
+
+.tagChipRemove {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+  color: var(--accent);
+  transition: background 0.1s;
+
+  &:hover {
+    background: var(--accent-border);
+    color: #fff;
+  }
+}
+
+.tagField {
+  flex: 1;
+  min-width: 8rem;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 4px 6px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--text-h);
+
+  &::placeholder {
+    color: var(--text);
+    opacity: 0.6;
+  }
+}

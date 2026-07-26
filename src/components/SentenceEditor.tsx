@@ -1,20 +1,23 @@
 import { useState } from 'react';
-import type { Sentence, TokenWithAnalysis } from '../types';
-import { NOUN_FORM_LABELS, PART_OF_SPEECH_LABELS, VERB_FORM_LABELS } from '../types';
-import { mergeTokens, splitToken } from '../tokenize';
-import { TokenAnalysisPanel } from './TokenAnalysisPanel';
-import styles from './SentenceEditor.module.css';
-import buttonStyles from '../styles/button.module.css';
+import type { Sentence, TokenWithAnalysis } from '@/types';
+import { NOUN_FORM_LABELS, PART_OF_SPEECH_LABELS, VERB_FORM_LABELS } from '@/types';
+import { mergeTokens, splitToken } from '@/tokenize';
+import { TokenAnalysisPanel } from '@/components/TokenAnalysisPanel';
+import { TagInput } from '@/components/TagInput';
+import styles from '@/components/SentenceEditor.module.css';
+import buttonStyles from '@/styles/button.module.css';
 
 interface Props {
   sentence: Sentence;
-  onSave: (tokens: TokenWithAnalysis[], naturalTranslation: string) => void;
+  onSave: (tokens: TokenWithAnalysis[], naturalTranslation: string, tags: string[]) => void;
   onBack: () => void;
+  tagSuggestions?: string[];
 }
 
-export function SentenceEditor({ sentence, onSave, onBack }: Props) {
+export function SentenceEditor({ sentence, onSave, onBack, tagSuggestions = [] }: Props) {
   const [tokens, setTokens] = useState<TokenWithAnalysis[]>(sentence.tokens);
   const [naturalTranslation, setNaturalTranslation] = useState(sentence.naturalTranslation);
+  const [tags, setTags] = useState<string[]>(sentence.tags);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [isPhraseMode, setIsPhraseMode] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -73,8 +76,13 @@ export function SentenceEditor({ sentence, onSave, onBack }: Props) {
   };
 
   const handleSave = () => {
-    onSave(tokens, naturalTranslation);
+    onSave(tokens, naturalTranslation, tags);
     setIsDirty(false);
+  };
+
+  const handleTagsChange = (next: string[]) => {
+    setTags(next);
+    setIsDirty(true);
   };
 
   const handleBack = () => {
@@ -204,6 +212,11 @@ export function SentenceEditor({ sentence, onSave, onBack }: Props) {
           placeholder="文章全体の自然な日本語訳..."
           rows={3}
         />
+      </div>
+
+      <div className={styles.sentenceTags}>
+        <span className={styles.sentenceTagsLabel}>タグ</span>
+        <TagInput value={tags} onChange={handleTagsChange} suggestions={tagSuggestions} />
       </div>
 
       {activeToken && !isPhraseMode ? (

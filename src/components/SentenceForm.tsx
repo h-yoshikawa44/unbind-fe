@@ -1,21 +1,25 @@
 import { useState } from 'react';
-import type { FormEvent } from 'react';
-import styles from './SentenceForm.module.css';
-import buttonStyles from '../styles/button.module.css';
+import type { SyntheticEvent } from 'react';
+import { normalizeTags } from '@/types';
+import { TagInput } from '@/components/TagInput';
+import styles from '@/components/SentenceForm.module.css';
+import buttonStyles from '@/styles/button.module.css';
 
 interface Props {
-  onSubmit: (text: string) => void;
+  onSubmit: (text: string, tags: string[]) => void;
   onCancel: () => void;
+  tagSuggestions?: string[];
 }
 
-export function SentenceForm({ onSubmit, onCancel }: Props) {
+export function SentenceForm({ onSubmit, onCancel, tagSuggestions = [] }: Props) {
   const [text, setText] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
     e.preventDefault();
     const trimmed = text.trim();
     if (!trimmed) return;
-    onSubmit(trimmed);
+    onSubmit(trimmed, normalizeTags(tags));
   };
 
   return (
@@ -29,6 +33,10 @@ export function SentenceForm({ onSubmit, onCancel }: Props) {
         rows={3}
         autoFocus
       />
+      <div className={styles.tagField}>
+        <span className={styles.tagLabel}>タグ</span>
+        <TagInput value={tags} onChange={setTags} suggestions={tagSuggestions} />
+      </div>
       <div className={styles.formActions}>
         <button
           type="button"

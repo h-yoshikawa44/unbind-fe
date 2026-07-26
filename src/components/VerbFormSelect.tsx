@@ -1,5 +1,5 @@
-import { VERB_FORM_LABELS, VERB_FORM_VALUES, isVerbForm } from '../types';
-import type { VerbForm } from '../types';
+import { VERB_FORM_LABELS, VERB_FORM_VALUES, isVerbForm } from '@/types';
+import type { VerbForm } from '@/types';
 
 interface Props {
   value: VerbForm | null;

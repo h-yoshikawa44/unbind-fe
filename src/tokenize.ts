@@ -5,7 +5,7 @@
  * 将来的にはサーバーサイドへ移行し、NLP ライブラリ (spaCy, NLTK など) を用いた
  * 自動品詞タグ付けやより高度なトークン化を実現することを想定している。
  */
-import type { TokenWithAnalysis } from './types';
+import type { TokenWithAnalysis } from '@/types';
 
 /** 英文を空白文字で分割し、単語トークンの配列を返す。 */
 export function tokenize(sentenceId: string, text: string): TokenWithAnalysis[] {

@@ -1,5 +1,5 @@
 import { Link, Outlet } from '@tanstack/react-router';
-import styles from './RootLayout.module.css';
+import styles from '@/layouts/RootLayout.module.css';
 
 export function RootLayout() {
   return (

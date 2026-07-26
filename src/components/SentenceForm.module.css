@@ -34,6 +34,21 @@
   }
 }
 
+.tagField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.tagLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+}
+
 .formActions {
   display: flex;
   gap: 8px;
