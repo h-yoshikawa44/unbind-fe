@@ -27,5 +27,8 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
+  "cmkOptions": {
+    "enabled": true
+  },
   "include": ["src"]
 }

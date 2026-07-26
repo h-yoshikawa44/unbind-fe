@@ -1,6 +1,7 @@
 {
   "files": [],
   "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
+  // codegen がこの tsconfig を使うので、tsconfig.app.json だけでなくこちらでも指定しておく
   "cmkOptions": {
     "enabled": true
   }
