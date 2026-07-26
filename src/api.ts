@@ -5,7 +5,8 @@
  * バックエンド実装後は各関数の中身を実際の HTTP リクエスト (fetch/axios) に置き換える。
  * 関数シグネチャと戻り値の型は REST API の形に合わせて設計しているため、移行は容易。
  */
-import type { Sentence, TokenWithAnalysis } from './types';
+import type { Sentence, TokenWithAnalysis } from '@/types';
+import { normalizeTags } from '@/types';
 
 const STORAGE_KEY = 'unbind_sentences';
 
@@ -13,8 +14,12 @@ function loadAll(): Sentence[] {
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- 実APIへ移行するまでは localStorage のデータを Sentence[] として信頼する
     const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]') as Sentence[];
-    // naturalTranslation をトークンレベルから文章レベルへ移行したため、古いデータにはフィールドが存在しない。
-    return raw.map((s) => ({ ...s, naturalTranslation: s.naturalTranslation ?? '' }));
+    // 後から追加したフィールドは古いデータに存在しないため、既定値で補完する。
+    return raw.map((s) => ({
+      ...s,
+      naturalTranslation: s.naturalTranslation ?? '',
+      tags: s.tags ?? [],
+    }));
   } catch {
     return [];
   }
@@ -33,6 +38,7 @@ export function fetchSentences(): Promise<Sentence[]> {
 export function createSentence(
   text: string,
   tokens: TokenWithAnalysis[],
+  tags: string[] = [],
   id: string = crypto.randomUUID(),
 ): Promise<Sentence> {
   const sentences = loadAll();
@@ -42,6 +48,7 @@ export function createSentence(
     text,
     tokens,
     naturalTranslation: '',
+    tags: normalizeTags(tags),
     createdAt: now,
     updatedAt: now,
   };
@@ -54,6 +61,7 @@ export function updateSentence(
   id: string,
   tokens: TokenWithAnalysis[],
   naturalTranslation: string,
+  tags: string[],
 ): Promise<Sentence> {
   const sentences = loadAll();
   const idx = sentences.findIndex((s) => s.id === id);
@@ -62,6 +70,7 @@ export function updateSentence(
     ...sentences[idx],
     tokens,
     naturalTranslation,
+    tags: normalizeTags(tags),
     updatedAt: new Date().toISOString(),
   };
   sentences[idx] = updated;
@@ -73,4 +82,13 @@ export function updateSentence(
 export function deleteSentence(id: string): Promise<void> {
   saveAll(loadAll().filter((s) => s.id !== id));
   return Promise.resolve();
+}
+
+/** GET /api/tags - 登録済みの全英文から使用中のタグ一覧（重複なし・50音/アルファベット順）を取得する */
+export function fetchAllTags(): Promise<string[]> {
+  const tagSet = new Set<string>();
+  for (const sentence of loadAll()) {
+    for (const tag of sentence.tags) tagSet.add(tag);
+  }
+  return Promise.resolve([...tagSet].sort((a, b) => a.localeCompare(b, 'ja')));
 }

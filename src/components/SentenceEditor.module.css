@@ -347,6 +347,27 @@
 }
 
 /* =====================================================
+   Sentence tags
+   ===================================================== */
+.sentenceTags {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sentenceTagsLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+}
+
+/* =====================================================
    Empty hint
    ===================================================== */
 .emptyHint {

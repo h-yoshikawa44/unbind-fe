@@ -4,12 +4,27 @@ import buttonStyles from '@/styles/button.module.css';
 
 interface Props {
   sentences: Sentence[];
+  allTags: string[];
+  selectedTags: string[];
+  onToggleTag: (tag: string) => void;
+  onClearTags: () => void;
   onEdit: (sentence: Sentence) => void;
   onDelete: (id: string) => void;
   onAdd: () => void;
 }
 
-export function SentenceList({ sentences, onEdit, onDelete, onAdd }: Props) {
+export function SentenceList({
+  sentences,
+  allTags,
+  selectedTags,
+  onToggleTag,
+  onClearTags,
+  onEdit,
+  onDelete,
+  onAdd,
+}: Props) {
+  const isFiltering = selectedTags.length > 0;
+
   return (
     <div className={styles.sentenceList}>
       <div className={styles.listHeader}>
@@ -23,16 +38,49 @@ export function SentenceList({ sentences, onEdit, onDelete, onAdd }: Props) {
         </button>
       </div>
 
+      {allTags.length > 0 && (
+        <div className={styles.filterBar}>
+          <span className={styles.filterLabel}>タグで絞り込み</span>
+          <div className={styles.filterTags}>
+            {allTags.map((tag) => {
+              const active = selectedTags.includes(tag);
+              return (
+                <button
+                  key={tag}
+                  type="button"
+                  className={`${styles.filterTag} ${active ? styles.filterTagActive : ''}`}
+                  aria-pressed={active}
+                  onClick={() => onToggleTag(tag)}
+                >
+                  {tag}
+                </button>
+              );
+            })}
+          </div>
+          {isFiltering && (
+            <button type="button" className={styles.filterClear} onClick={onClearTags}>
+              クリア
+            </button>
+          )}
+        </div>
+      )}
+
       {sentences.length === 0 ? (
         <div className={styles.emptyState}>
-          <p>まだ英文が登録されていません。</p>
-          <button
-            type="button"
-            className={`${buttonStyles.btn} ${buttonStyles.btnPrimary}`}
-            onClick={onAdd}
-          >
-            最初の英文を追加する
-          </button>
+          {isFiltering ? (
+            <p>選択したタグを含む英文はありません。</p>
+          ) : (
+            <>
+              <p>まだ英文が登録されていません。</p>
+              <button
+                type="button"
+                className={`${buttonStyles.btn} ${buttonStyles.btnPrimary}`}
+                onClick={onAdd}
+              >
+                最初の英文を追加する
+              </button>
+            </>
+          )}
         </div>
       ) : (
         <ul className={styles.sentenceItems}>
@@ -44,6 +92,15 @@ export function SentenceList({ sentences, onEdit, onDelete, onAdd }: Props) {
                 onClick={() => onEdit(sentence)}
               >
                 <p className={styles.sentenceItemText}>{sentence.text}</p>
+                {sentence.tags.length > 0 && (
+                  <div className={styles.sentenceItemTags}>
+                    {sentence.tags.map((tag) => (
+                      <span key={tag} className={styles.sentenceItemTag}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 <p className={styles.sentenceItemMeta}>
                   {sentence.tokens.length} トークン ·{' '}
                   {new Date(sentence.updatedAt).toLocaleDateString('ja-JP')}

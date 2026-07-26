@@ -150,12 +150,31 @@ export type TokenWithAnalysis = Token & Omit<TokenAnalysis, 'tokenId'>;
 /**
  * 英文とそのトークン分析データをまとめたエンティティ。
  * DB対応: "sentences" テーブルに対応（トークンは別テーブルで管理）。
+ *
+ * tags は「過去文」「あいさつ文」などの自由入力ラベル。複数指定可能。
+ * DB移行時は sentence_tags 中間テーブルへ分割する想定。
  */
 export interface Sentence {
   id: string;
   text: string;
   tokens: TokenWithAnalysis[];
   naturalTranslation: string;
+  tags: string[];
   createdAt: string;
   updatedAt: string;
+}
+
+/**
+ * タグ配列を正規化する（前後空白の除去・空文字の除外・重複排除。順序は保持）。
+ */
+export function normalizeTags(tags: readonly string[]): string[] {
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const raw of tags) {
+    const tag = raw.trim();
+    if (!tag || seen.has(tag)) continue;
+    seen.add(tag);
+    result.push(tag);
+  }
+  return result;
 }
