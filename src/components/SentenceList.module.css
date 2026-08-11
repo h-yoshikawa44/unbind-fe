@@ -196,3 +196,44 @@
   color: var(--text);
   display: block;
 }
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+}
+
+.pageButton {
+  all: unset;
+  cursor: pointer;
+  padding: 5px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  transition:
+    border-color 0.1s,
+    color 0.1s;
+
+  &:hover:not(:disabled) {
+    border-color: var(--accent-border);
+    color: var(--accent);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.pageStatus {
+  font-size: 0.8rem;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}

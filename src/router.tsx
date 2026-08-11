@@ -9,10 +9,12 @@ import { normalizeTags } from './types';
  * 英文一覧のクエリパラメータ。
  * タグ絞り込みは `?tags=過去文,あいさつ文` のようにカンマ区切りで表現する。
  * キーワード絞り込みは `?q=hello world` のように空白区切りで表現する（複数キーワードは AND）。
+ * ページングは `?page=2` のように 1 始まりのページ番号で表現する（1 ページ目は省略）。
  */
 interface SentencesSearch {
   tags?: string;
   q?: string;
+  page?: number;
 }
 
 const rootRoute = createRootRoute({ component: RootLayout });
@@ -35,6 +37,11 @@ const indexRoute = createRoute({
       const q = rawQ.trim();
       if (q) result.q = q;
     }
+
+    // ページ番号は 1 始まりの整数。1 ページ目は URL を汚さないよう省略する。
+    const rawPage = search.page;
+    const page = typeof rawPage === 'number' ? rawPage : Number(rawPage);
+    if (Number.isInteger(page) && page > 1) result.page = page;
 
     return result;
   },

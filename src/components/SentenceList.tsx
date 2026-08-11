@@ -4,12 +4,16 @@ import buttonStyles from '@/styles/button.module.css';
 
 interface Props {
   sentences: Sentence[];
+  totalCount: number;
+  currentPage: number;
+  totalPages: number;
   allTags: string[];
   selectedTags: string[];
   keyword: string;
   onToggleTag: (tag: string) => void;
   onKeywordChange: (value: string) => void;
   onClearFilters: () => void;
+  onPageChange: (page: number) => void;
   onEdit: (sentence: Sentence) => void;
   onDelete: (id: string) => void;
   onAdd: () => void;
@@ -17,12 +21,16 @@ interface Props {
 
 export function SentenceList({
   sentences,
+  totalCount,
+  currentPage,
+  totalPages,
   allTags,
   selectedTags,
   keyword,
   onToggleTag,
   onKeywordChange,
   onClearFilters,
+  onPageChange,
   onEdit,
   onDelete,
   onAdd,
@@ -141,6 +149,30 @@ export function SentenceList({
             </li>
           ))}
         </ul>
+      )}
+
+      {totalPages > 1 && (
+        <div className={styles.pagination}>
+          <button
+            type="button"
+            className={styles.pageButton}
+            disabled={currentPage <= 1}
+            onClick={() => onPageChange(currentPage - 1)}
+          >
+            ← 前へ
+          </button>
+          <span className={styles.pageStatus}>
+            {currentPage} / {totalPages} ページ（全 {totalCount} 件）
+          </span>
+          <button
+            type="button"
+            className={styles.pageButton}
+            disabled={currentPage >= totalPages}
+            onClick={() => onPageChange(currentPage + 1)}
+          >
+            次へ →
+          </button>
+        </div>
       )}
     </div>
   );
