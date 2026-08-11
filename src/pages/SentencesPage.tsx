@@ -4,10 +4,13 @@ import type { Sentence } from '@/types';
 import { deleteSentence, fetchSentences } from '@/api';
 import { SentenceList } from '@/components/SentenceList';
 
+/** 1 ページあたりに表示する英文の件数。 */
+const PAGE_SIZE = 20;
+
 export function SentencesPage() {
   const [sentences, setSentences] = useState<Sentence[]>([]);
   const navigate = useNavigate();
-  const { tags, q } = useSearch({ from: '/' });
+  const { tags, q, page } = useSearch({ from: '/' });
 
   const selectedTags = useMemo(() => (tags ? tags.split(',') : []), [tags]);
 
@@ -42,22 +45,37 @@ export function SentencesPage() {
     });
   }, [sentences, selectedTags, keywords]);
 
+  // ページング: 絞り込み後の結果を PAGE_SIZE 件ずつに分割する。
+  // 絞り込みや削除で総ページ数が減った場合に備え、表示ページは有効範囲へ丸める。
+  const totalPages = Math.max(1, Math.ceil(filteredSentences.length / PAGE_SIZE));
+  const currentPage = Math.min(Math.max(page ?? 1, 1), totalPages);
+  const pagedSentences = useMemo(
+    () => filteredSentences.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE),
+    [filteredSentences, currentPage],
+  );
+
   const handleToggleTag = (tag: string) => {
     const next = selectedTags.includes(tag)
       ? selectedTags.filter((t) => t !== tag)
       : [...selectedTags, tag];
+    // 絞り込み条件が変わると総ページ数も変わるため、1 ページ目に戻す。
     void navigate({
       to: '/',
-      search: (prev) => ({ ...prev, tags: next.length > 0 ? next.join(',') : undefined }),
+      search: (prev) => ({
+        ...prev,
+        tags: next.length > 0 ? next.join(',') : undefined,
+        page: undefined,
+      }),
     });
   };
 
   const handleKeywordChange = (value: string) => {
     setKeyword(value);
     const trimmed = value.trim();
+    // 絞り込み条件が変わると総ページ数も変わるため、1 ページ目に戻す。
     void navigate({
       to: '/',
-      search: (prev) => ({ ...prev, q: trimmed.length > 0 ? trimmed : undefined }),
+      search: (prev) => ({ ...prev, q: trimmed.length > 0 ? trimmed : undefined, page: undefined }),
       replace: true,
     });
   };
@@ -65,6 +83,13 @@ export function SentencesPage() {
   const handleClearFilters = () => {
     setKeyword('');
     void navigate({ to: '/', search: {} });
+  };
+
+  const handlePageChange = (nextPage: number) => {
+    void navigate({
+      to: '/',
+      search: (prev) => ({ ...prev, page: nextPage > 1 ? nextPage : undefined }),
+    });
   };
 
   const handleEdit = (sentence: Sentence) => {
@@ -82,13 +107,17 @@ export function SentencesPage() {
 
   return (
     <SentenceList
-      sentences={filteredSentences}
+      sentences={pagedSentences}
+      totalCount={filteredSentences.length}
+      currentPage={currentPage}
+      totalPages={totalPages}
       allTags={allTags}
       selectedTags={selectedTags}
       keyword={keyword}
       onToggleTag={handleToggleTag}
       onKeywordChange={handleKeywordChange}
       onClearFilters={handleClearFilters}
+      onPageChange={handlePageChange}
       onEdit={handleEdit}
       onDelete={handleDelete}
       onAdd={handleAdd}
