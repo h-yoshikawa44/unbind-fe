@@ -6,8 +6,10 @@ interface Props {
   sentences: Sentence[];
   allTags: string[];
   selectedTags: string[];
+  keyword: string;
   onToggleTag: (tag: string) => void;
-  onClearTags: () => void;
+  onKeywordChange: (value: string) => void;
+  onClearFilters: () => void;
   onEdit: (sentence: Sentence) => void;
   onDelete: (id: string) => void;
   onAdd: () => void;
@@ -17,13 +19,15 @@ export function SentenceList({
   sentences,
   allTags,
   selectedTags,
+  keyword,
   onToggleTag,
-  onClearTags,
+  onKeywordChange,
+  onClearFilters,
   onEdit,
   onDelete,
   onAdd,
 }: Props) {
-  const isFiltering = selectedTags.length > 0;
+  const isFiltering = selectedTags.length > 0 || keyword.trim().length > 0;
 
   return (
     <div className={styles.sentenceList}>
@@ -38,37 +42,47 @@ export function SentenceList({
         </button>
       </div>
 
-      {allTags.length > 0 && (
-        <div className={styles.filterBar}>
-          <span className={styles.filterLabel}>タグで絞り込み</span>
-          <div className={styles.filterTags}>
-            {allTags.map((tag) => {
-              const active = selectedTags.includes(tag);
-              return (
-                <button
-                  key={tag}
-                  type="button"
-                  className={`${styles.filterTag} ${active ? styles.filterTagActive : ''}`}
-                  aria-pressed={active}
-                  onClick={() => onToggleTag(tag)}
-                >
-                  {tag}
-                </button>
-              );
-            })}
-          </div>
-          {isFiltering && (
-            <button type="button" className={styles.filterClear} onClick={onClearTags}>
-              クリア
-            </button>
-          )}
-        </div>
-      )}
+      <div className={styles.filterBar}>
+        <span className={styles.filterLabel}>キーワードで絞り込み</span>
+        <input
+          type="search"
+          className={styles.filterKeyword}
+          value={keyword}
+          placeholder="英文・和訳を検索（空白区切りで複数指定）"
+          onChange={(e) => onKeywordChange(e.target.value)}
+        />
+        {allTags.length > 0 && (
+          <>
+            <span className={styles.filterLabel}>タグで絞り込み</span>
+            <div className={styles.filterTags}>
+              {allTags.map((tag) => {
+                const active = selectedTags.includes(tag);
+                return (
+                  <button
+                    key={tag}
+                    type="button"
+                    className={`${styles.filterTag} ${active ? styles.filterTagActive : ''}`}
+                    aria-pressed={active}
+                    onClick={() => onToggleTag(tag)}
+                  >
+                    {tag}
+                  </button>
+                );
+              })}
+            </div>
+          </>
+        )}
+        {isFiltering && (
+          <button type="button" className={styles.filterClear} onClick={onClearFilters}>
+            クリア
+          </button>
+        )}
+      </div>
 
       {sentences.length === 0 ? (
         <div className={styles.emptyState}>
           {isFiltering ? (
-            <p>選択したタグを含む英文はありません。</p>
+            <p>絞り込み条件に一致する英文はありません。</p>
           ) : (
             <>
               <p>まだ英文が登録されていません。</p>

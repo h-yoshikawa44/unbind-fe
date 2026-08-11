@@ -8,9 +8,11 @@ import { normalizeTags } from './types';
 /**
  * 英文一覧のクエリパラメータ。
  * タグ絞り込みは `?tags=過去文,あいさつ文` のようにカンマ区切りで表現する。
+ * キーワード絞り込みは `?q=hello world` のように空白区切りで表現する（複数キーワードは AND）。
  */
 interface SentencesSearch {
   tags?: string;
+  q?: string;
 }
 
 const rootRoute = createRootRoute({ component: RootLayout });
@@ -20,10 +22,21 @@ const indexRoute = createRoute({
   path: '/',
   component: SentencesPage,
   validateSearch: (search: Record<string, unknown>): SentencesSearch => {
-    const raw = search.tags;
-    if (typeof raw !== 'string') return {};
-    const tags = normalizeTags(raw.split(','));
-    return tags.length > 0 ? { tags: tags.join(',') } : {};
+    const result: SentencesSearch = {};
+
+    const rawTags = search.tags;
+    if (typeof rawTags === 'string') {
+      const tags = normalizeTags(rawTags.split(','));
+      if (tags.length > 0) result.tags = tags.join(',');
+    }
+
+    const rawQ = search.q;
+    if (typeof rawQ === 'string') {
+      const q = rawQ.trim();
+      if (q) result.q = q;
+    }
+
+    return result;
   },
 });
 
