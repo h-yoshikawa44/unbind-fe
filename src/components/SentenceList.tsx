@@ -43,16 +43,24 @@ export function SentenceList({
       </div>
 
       <div className={styles.filterBar}>
-        <span className={styles.filterLabel}>キーワードで絞り込み</span>
-        <input
-          type="search"
-          className={styles.filterKeyword}
-          value={keyword}
-          placeholder="英文・和訳を検索（空白区切りで複数指定）"
-          onChange={(e) => onKeywordChange(e.target.value)}
-        />
+        <div className={styles.filterRow}>
+          <span className={styles.filterLabel}>キーワードで絞り込み</span>
+          <input
+            type="search"
+            className={styles.filterKeyword}
+            value={keyword}
+            placeholder="英文・和訳を検索（空白区切りで複数指定）"
+            onChange={(e) => onKeywordChange(e.target.value)}
+          />
+          {isFiltering && (
+            <button type="button" className={styles.filterClear} onClick={onClearFilters}>
+              クリア
+            </button>
+          )}
+        </div>
+
         {allTags.length > 0 && (
-          <>
+          <div className={styles.filterRow}>
             <span className={styles.filterLabel}>タグで絞り込み</span>
             <div className={styles.filterTags}>
               {allTags.map((tag) => {
@@ -70,12 +78,7 @@ export function SentenceList({
                 );
               })}
             </div>
-          </>
-        )}
-        {isFiltering && (
-          <button type="button" className={styles.filterClear} onClick={onClearFilters}>
-            クリア
-          </button>
+          </div>
         )}
       </div>
 
