@@ -29,9 +29,10 @@ function saveAll(sentences: Sentence[]): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(sentences));
 }
 
-/** GET /api/sentences - 英文一覧を取得する */
+/** GET /api/sentences - 英文一覧を取得する（最終更新日の降順） */
 export function fetchSentences(): Promise<Sentence[]> {
-  return Promise.resolve(loadAll());
+  const sentences = loadAll().sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  return Promise.resolve(sentences);
 }
 
 /** POST /api/sentences - 英文を新規作成する */
