@@ -10,6 +10,7 @@
     "dev:vite": "vp dev",
     "build": "run-s -c generate build:*",
     "build:vite": "tsc -b && vp build",
+    "typecheck": "tsc -b --noEmit",
     "lint": "vp check",
     "lint:oxlint": "vp lint",
     "check:oxfmt": "vp fmt --check",
