@@ -27,11 +27,12 @@ export default defineConfig({
       // 明示的な React インポートは不要なのでオフ
       'react/react-in-jsx-scope': 'off',
     },
-    ignorePatterns: ['generated/**'],
+    // generated/** は cmk、app/pages.gen.ts は @hono/inertia/vite の自動生成物
+    ignorePatterns: ['generated/**', 'app/pages.gen.ts', 'dist/**'],
   },
   fmt: {
     singleQuote: true,
-    ignorePatterns: ['generated/**'],
+    ignorePatterns: ['generated/**', 'app/pages.gen.ts', 'dist/**'],
   },
   staged: {
     '*': 'vp check --fix',
