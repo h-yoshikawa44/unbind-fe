@@ -6,7 +6,7 @@ export function RootLayout({ children }: { children: ReactNode }) {
   return (
     <div className={styles.app}>
       <header className={styles.appHeader}>
-        <Link href='/' className={styles.appLogo}>
+        <Link href="/" className={styles.appLogo}>
           Unbind
         </Link>
         <span className={styles.appSubtitle}>英文分解・翻訳アシスタント</span>
