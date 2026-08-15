@@ -3,6 +3,7 @@ import type { PageProps } from '../../pages.gen';
 import type { TokenWithAnalysis } from '@/types';
 import { RootLayout } from '@/layouts/RootLayout';
 import { SentenceEditor } from '@/components/SentenceEditor';
+import { toPayload } from '@/inertia';
 import styles from './Show.module.css';
 
 export default function Show({ sentence, tagSuggestions }: PageProps<'Sentences/Show'>) {
@@ -16,12 +17,8 @@ export default function Show({ sentence, tagSuggestions }: PageProps<'Sentences/
     );
   }
 
-  const handleSave = (
-    tokens: TokenWithAnalysis[],
-    naturalTranslation: string,
-    tags: string[],
-  ) => {
-    router.put(`/sentences/${sentence.id}`, { tokens, naturalTranslation, tags });
+  const handleSave = (tokens: TokenWithAnalysis[], naturalTranslation: string, tags: string[]) => {
+    router.put(`/sentences/${sentence.id}`, toPayload({ tokens, naturalTranslation, tags }));
   };
 
   const handleBack = () => {
