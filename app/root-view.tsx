@@ -12,7 +12,13 @@ const Document = ({ page }: { page: Parameters<RootView>[0] }) => (
       <Script src="/src/client.tsx" type="module" />
     </head>
     <body>
-      <div id="app" data-page={serializePage(page)} />
+      {/* Inertia v3 は script[data-page="app"][type="application/json"] の textContent から初期ページを読む */}
+      <script
+        data-page="app"
+        type="application/json"
+        dangerouslySetInnerHTML={{ __html: serializePage(page) }}
+      />
+      <div id="app" />
     </body>
   </html>
 );
