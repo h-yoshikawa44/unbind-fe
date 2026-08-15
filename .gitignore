@@ -23,3 +23,7 @@ dist-ssr
 
 # Auto generate
 generated/*
+app/pages.gen.ts
+
+# JSON ファイル永続化のデータ実体（サーバ側ストア）
+data.json
