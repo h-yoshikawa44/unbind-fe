@@ -1,6 +1,9 @@
 import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vite-plus';
 import react from '@vitejs/plugin-react';
+import devServer from '@hono/vite-dev-server';
+import { inertiaPages } from '@hono/inertia/vite';
+import ssrPlugin from 'vite-ssr-components/plugin';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -33,5 +36,10 @@ export default defineConfig({
   staged: {
     '*': 'vp check --fix',
   },
-  plugins: [react()],
+  plugins: [
+    react(),
+    devServer({ entry: 'app/server.tsx', injectClientScript: false }),
+    inertiaPages(),
+    ...ssrPlugin(),
+  ],
 });
