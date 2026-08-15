@@ -3,19 +3,16 @@ import { serializePage, type RootView } from '@hono/inertia';
 import { ReactRefresh, Script, ViteClient } from 'vite-ssr-components/react';
 
 const Document = ({ page }: { page: Parameters<RootView>[0] }) => (
-  <html lang='ja'>
+  <html lang="ja">
     <head>
-      <meta charSet='UTF-8' />
-      <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+      <meta charSet="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <ViteClient />
       <ReactRefresh />
-      <Script src='/src/client.tsx' type='module' />
+      <Script src="/src/client.tsx" type="module" />
     </head>
     <body>
-      <div
-        id='app'
-        data-page={serializePage(page)}
-      />
+      <div id="app" data-page={serializePage(page)} />
     </body>
   </html>
 );
