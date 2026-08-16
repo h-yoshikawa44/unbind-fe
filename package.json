@@ -1,5 +1,5 @@
 {
-  "name": "unbind-fe",
+  "name": "unbind",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -11,7 +11,8 @@
     "build": "run-s -c generate build:client build:server",
     "build:client": "tsc -b && vp build",
     "build:server": "vp build --mode server",
-    "start": "node dist-server/index.js",
+    "preview": "run-s build && wrangler dev",
+    "deploy": "run-s build && wrangler deploy",
     "typecheck": "tsc -b --noEmit",
     "lint": "vp check",
     "lint:oxlint": "vp lint",
@@ -22,7 +23,6 @@
   },
   "dependencies": {
     "@hono/inertia": "^0.7.0",
-    "@hono/node-server": "^2.1.0",
     "@hono/zod-validator": "^0.9.0",
     "@inertiajs/react": "^3.6.1",
     "hono": "^4.13.1",
@@ -31,6 +31,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260809.1",
     "@css-modules-kit/codegen": "^1.4.0",
     "@hono/vite-build": "^1.11.1",
     "@hono/vite-dev-server": "^0.26.1",
@@ -38,11 +39,13 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
+    "miniflare": "^4.20260730.0",
     "npm-run-all2": "^9.0.2",
     "typescript": "^6.0.3",
     "vite": "npm:@voidzero-dev/vite-plus-core@0.2.5",
     "vite-plus": "^0.2.5",
-    "vite-ssr-components": "^0.6.1"
+    "vite-ssr-components": "^0.6.1",
+    "wrangler": "^4.120.0"
   },
   "overrides": {
     "vite": "npm:@voidzero-dev/vite-plus-core@0.2.5",
