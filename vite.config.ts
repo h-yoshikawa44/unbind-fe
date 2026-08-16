@@ -3,7 +3,8 @@ import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vite-plus';
 import react from '@vitejs/plugin-react';
 import devServer from '@hono/vite-dev-server';
-import nodeBuild from '@hono/vite-build/node';
+import cloudflareAdapter from '@hono/vite-dev-server/cloudflare';
+import cloudflareWorkersBuild from '@hono/vite-build/cloudflare-workers';
 import { inertiaPages } from '@hono/inertia/vite';
 import ssrPlugin from 'vite-ssr-components/plugin';
 
@@ -59,20 +60,24 @@ export default defineConfig(({ command, mode }) => {
       inertiaPages(),
       ...(isServerBuild
         ? [
-            // Hono アプリを Node 向けにビルドし、@hono/node-server で起動する単一エントリを生成する。
-            // クライアント資産（/assets/*）は dist から serveStatic で配信する。
-            nodeBuild({
+            // Hono アプリを Cloudflare Workers 向けにビルドし、dist-server/index.js を生成する。
+            // 静的資産（/assets/* 等）は wrangler.jsonc の assets バインディングで dist から配信する。
+            cloudflareWorkersBuild({
               entry: 'app/server.tsx',
               outputDir: './dist-server',
-              staticPaths: ['/assets/*'],
-              staticRoot: './dist',
-              port: 3000,
             }),
           ]
         : [
             // dev のみ Hono を Vite ミドルウェアとして実行する。
+            // cloudflare アダプタで Miniflare 経由の KV バインディング（c.env）を注入する。
             ...(command === 'serve'
-              ? [devServer({ entry: 'app/server.tsx', injectClientScript: false })]
+              ? [
+                  devServer({
+                    entry: 'app/server.tsx',
+                    injectClientScript: false,
+                    adapter: cloudflareAdapter,
+                  }),
+                ]
               : []),
             // クライアントビルド / dev の資産解決を担う。
             ...ssrPlugin(),
