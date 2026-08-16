@@ -9,24 +9,22 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { Sentence, TokenWithAnalysis } from '@/types';
 import { normalizeTags } from '@/types';
+import { storedSentencesSchema } from '@/schemas';
 
 const DATA_FILE = resolve(process.cwd(), 'data.json');
 
 async function loadAll(): Promise<Sentence[]> {
+  let text: string;
   try {
-    const text = await readFile(DATA_FILE, 'utf-8');
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- data.json のデータを Sentence[] として信頼する（DB 導入時に検証へ差し替え）
-    const raw = JSON.parse(text) as Sentence[];
-    // 後から追加したフィールドは古いデータに存在しないため、既定値で補完する。
-    return raw.map((s) => ({
-      ...s,
-      naturalTranslation: s.naturalTranslation ?? '',
-      tags: s.tags ?? [],
-    }));
+    text = await readFile(DATA_FILE, 'utf-8');
   } catch {
-    // ファイルが無い / 壊れている場合は空データとして扱う。
+    // ファイルが無い場合は空データ（初回保存前）として扱う。
     return [];
   }
+  // ここで検証して初めて Sentence[] とみなす（旧: JSON.parse を as で信頼していた箇所）。
+  // naturalTranslation / tags が無い古いデータはスキーマ側の既定値で補完される。
+  // 破損データは握りつぶさず例外にして気付けるようにする。
+  return storedSentencesSchema.parse(JSON.parse(text));
 }
 
 async function saveAll(sentences: Sentence[]): Promise<void> {

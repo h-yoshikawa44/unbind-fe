@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { inertia } from '@hono/inertia';
-import type { TokenWithAnalysis } from '@/types';
+import { zValidator } from '@hono/zod-validator';
+import { createSentenceBodySchema, updateSentenceBodySchema } from '@/schemas';
 import { rootView } from './root-view';
 import {
   createSentence,
@@ -35,24 +36,15 @@ const app = new Hono()
     return c.render('Sentences/Show', { sentence, tagSuggestions });
   })
   // 英文を新規作成する（tokens はクライアントで tokenize 済みを受領）。
-  .post('/sentences', async (c) => {
-    const body = await c.req.json<{
-      id: string;
-      text: string;
-      tokens: TokenWithAnalysis[];
-      tags: string[];
-    }>();
+  .post('/sentences', zValidator('json', createSentenceBodySchema), async (c) => {
+    const body = c.req.valid('json');
     const sentence = await createSentence(body.text, body.tokens, body.tags, body.id);
     return c.redirect(`/sentences/${sentence.id}`, 303);
   })
   // 英文のトークン分析データを更新する。
-  .put('/sentences/:id', async (c) => {
+  .put('/sentences/:id', zValidator('json', updateSentenceBodySchema), async (c) => {
     const id = c.req.param('id');
-    const body = await c.req.json<{
-      tokens: TokenWithAnalysis[];
-      naturalTranslation: string;
-      tags: string[];
-    }>();
+    const body = c.req.valid('json');
     await updateSentence(id, body.tokens, body.naturalTranslation, body.tags);
     return c.redirect(`/sentences/${id}`, 303);
   })
