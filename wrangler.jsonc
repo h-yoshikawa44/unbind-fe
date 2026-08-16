@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "unbind",
+  // ビルド成果物（Hono アプリの Workers エントリ）。npm run build で生成される。
+  "main": "dist-server/index.js",
+  "compatibility_date": "2026-08-08",
+  // react-dom/server 等が参照する Node 互換 API のための保険。
+  "compatibility_flags": ["nodejs_compat"],
+  // クライアントビルド（/assets/* など）を静的アセットとして配信する。
+  // マッチしないパスは Worker（Hono）へフォールバックする。
+  "assets": {
+    "directory": "./dist",
+  },
+  // 英文データを保存する KV。
+  // （ローカルの wrangler dev / npm run dev はダミー id でも動く）。
+  "kv_namespaces": [
+    {
+      "binding": "UNBIND_KV",
+      "id": "69f4c9c1e6b245c3ae4398a01168251d",
+    },
+  ],
+  "observability": {
+    "enabled": true,
+  },
+}

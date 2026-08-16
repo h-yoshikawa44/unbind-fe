@@ -6,11 +6,12 @@
 
 ## ルート
 
-| 項目                 | 値                                                               |
-| -------------------- | ---------------------------------------------------------------- |
-| URL                  | `/sentences/new`                                                 |
-| ページコンポーネント | `src/pages/SentenceNewPage.tsx`                                  |
-| UIコンポーネント     | `src/components/SentenceForm.tsx`, `src/components/TagInput.tsx` |
+| 項目                 | 値                                                                                                   |
+| -------------------- | ---------------------------------------------------------------------------------------------------- |
+| URL                  | `/sentences/new`                                                                                     |
+| サーバルート         | `GET /sentences/new`（`app/server.tsx`）。`fetchAllTags()` を props で渡す。作成は `POST /sentences` |
+| ページコンポーネント | `app/pages/Sentences/New.tsx`（props を `PageProps<'Sentences/New'>` で受領）                        |
+| UIコンポーネント     | `src/components/SentenceForm.tsx`, `src/components/TagInput.tsx`                                     |
 
 ## 画面レイアウト
 
@@ -87,8 +88,8 @@
 1. テキストをトリムし、タグを正規化して `onSubmit(text, tags)` を呼び出す
 2. `crypto.randomUUID()` で新しい英文IDを生成
 3. `tokenize(id, text)` でスペース区切りのトークン配列を生成（各トークンはランダムUUID付与）
-4. `createSentence(text, tokens, tags, id)` でlocalStorageに保存
-5. 作成した英文の `/sentences/{id}` へリダイレクト
+4. `router.post('/sentences', toPayload({ id, text, tokens, tags }))` を呼ぶ（tokenize はクライアント側で実施）
+5. サーバの `POST /sentences`（`createSentence`）が JSON ファイルに保存し、`/sentences/{id}` へ 303 リダイレクト → 詳細ページが表示される
 
 ## 画面遷移
 
@@ -103,17 +104,17 @@
 
 ## ページ状態
 
-フォームの入力状態は `SentenceForm` コンポーネントが内部で保持する。ページ (`SentenceNewPage`) はタグ候補のみを保持する。
+フォームの入力状態は `SentenceForm` コンポーネントが内部で保持する。ページ (`New`) はタグ候補（props）のみを扱う。
 
-| 状態変数         | 型         | コンポーネント    | 説明                                                           |
-| ---------------- | ---------- | ----------------- | -------------------------------------------------------------- |
-| `text`           | `string`   | `SentenceForm`    | テキストエリアの入力値                                         |
-| `tags`           | `string[]` | `SentenceForm`    | 付与したタグの一覧                                             |
-| `tagSuggestions` | `string[]` | `SentenceNewPage` | タグ入力のサジェスト候補。マウント時に `fetchAllTags()` で取得 |
+| 状態変数         | 型         | コンポーネント | 説明                                                             |
+| ---------------- | ---------- | -------------- | ---------------------------------------------------------------- |
+| `text`           | `string`   | `SentenceForm` | テキストエリアの入力値                                           |
+| `tags`           | `string[]` | `SentenceForm` | 付与したタグの一覧                                               |
+| `tagSuggestions` | `string[]` | `New`（props） | タグ入力のサジェスト候補。サーバの `GET /sentences/new` から受領 |
 
-## API呼び出し
+## サーバとのやり取り（Inertia）
 
-| タイミング     | 関数                                     | 説明                                                                       |
-| -------------- | ---------------------------------------- | -------------------------------------------------------------------------- |
-| マウント時     | `fetchAllTags()`                         | 既存タグ一覧を取得し、タグ入力のサジェスト候補にセット                     |
-| フォーム送信時 | `createSentence(text, tokens, tags, id)` | 英文・初期トークン・タグをlocalStorageに保存し、作成した `Sentence` を返す |
+| タイミング     | 方式                                          | 説明                                                                                                         |
+| -------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| ページ表示     | `GET /sentences/new` → props                  | `fetchAllTags()` の既存タグをサジェスト候補として props で受領                                               |
+| フォーム送信時 | `router.post('/sentences', toPayload({...}))` | サーバの `POST /sentences`（`createSentence`）が JSON ファイルに保存し `/sentences/{id}` へ 303 リダイレクト |

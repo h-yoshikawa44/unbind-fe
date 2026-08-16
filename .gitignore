@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 dist
+dist-server
 dist-ssr
 *.local
 
@@ -23,3 +24,10 @@ dist-ssr
 
 # Auto generate
 generated/*
+
+# Cloudflare Workers（wrangler のローカル状態・ローカル KV / シークレット）
+.wrangler
+.dev.vars
+
+# JSON ファイル永続化のデータ実体（旧サーバ側ストア。KV 移行後は未使用だが seed 用に残置）
+data.json
