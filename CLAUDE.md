@@ -1,8 +1,8 @@
-# unbind-fe
+# unbind
 
 英文を単語・句に分解して品詞や訳を付けて学習する Web アプリ。
 **Hono + Inertia + React 19** 構成（サーバがルーティングとデータ取得を担い、React ページへ props を注入する）。
-TypeScript(strict) + Vite+（vite-plus）。ランタイムは Node（`@hono/node-server`）。
+TypeScript(strict) + Vite+（vite-plus）。デプロイ先は **Cloudflare Workers**（`@hono/vite-build/cloudflare-workers` でビルド。データは KV に保存）。
 構成の要点・落とし穴は `app/` 配下と、この後の「アーキテクチャの要点」を参照。
 
 ## コマンド（npm/pnpm ではなく vp を使う）
@@ -13,8 +13,9 @@ lint / format はパッケージマネージャではなく vite-plus の `vp` C
 - フォーマットのみ: `vp fmt`（`singleQuote`）
 - 型チェック: `npm run typecheck`（= `tsc -b --noEmit`。solution 構成なので `-b` が必須。`tsc --noEmit` 単体では何も検査しない）
 - 開発サーバ: `npm run dev`（cmk watch + `vp dev`。Hono を Vite ミドルウェアとして実行し http://localhost:5173 で配信）
-- ビルド: `npm run build`（`generate` → `build:client`（`vp build`）→ `build:server`（`vp build --mode server`）の順。サーバは client のマニフェストを参照するため client → server の順が必須）
-- 本番起動: `npm run start`（`node dist-server/index.js`。http://localhost:3000）
+- ビルド: `npm run build`（`generate` → `build:client`（`vp build`）→ `build:server`（`vp build --mode server` = Workers エントリ `dist-server/index.js`）の順。サーバは client のマニフェストを参照するため client → server の順が必須）
+- ローカルで Workers ランタイム確認: `npm run preview`（`build` → `wrangler dev`。http://localhost:8787。KV は Miniflare のローカル模擬）
+- 本番デプロイ: `npm run deploy`（`build` → `wrangler deploy`。事前に `wrangler kv namespace create UNBIND_KV` で作った id を `wrangler.jsonc` に設定・`wrangler login` が必要）
 - **CSS Module のクラスを追加/削除したら `npm run generate`**（cmk が型を再生成。これを忘れると型が古いまま typecheck が通ってしまう）
 
 ## TypeScript 規約（型/リンタが強制するので違反するとエラー）
@@ -38,7 +39,9 @@ lint / format はパッケージマネージャではなく vite-plus の `vp` C
 
 - **`app/`＝サーバ + Inertia ページ、`src/`＝共有コード**（`@/` エイリアスは `src` を指す）
   - `app/server.tsx`: Hono ルート。**ルートは必ずメソッドチェーンで書く**（`new Hono().use(...).get(...).post(...)`）。別文の `app.get()` だと型がスキーマに蓄積されず、`PageProps<'...'>` が `never` になる
-  - `app/store.ts`: データ層。現在は JSON ファイル（`data.json`）実装だが、関数シグネチャ・戻り値は REST API 形（`fetchSentences` = `GET /api/sentences` 等）に寄せてある。DB 導入時は中身だけ差し替える前提
+  - `app/store.ts`: データ層。**Cloudflare KV** 実装（全 sentences を 1 キー `sentences` に JSON 配列で保存）。KV バインディングは `c.env` からしか取れないため各関数は第 1 引数に `KVNamespace` を受け取る。関数シグネチャ・戻り値は REST API 形（`fetchSentences` = `GET /api/sentences` 等）に寄せてある。DB（D1 等）導入時は中身だけ差し替える前提。※全件ロード方式なので件数増による重さは JSON 時代と同等 — スケールさせるなら D1 + サーバ側ページングへ
+  - `wrangler.jsonc`: Workers 設定（`main`=Workers エントリ、`assets`=`dist` を静的配信、`kv_namespaces` の `UNBIND_KV`）。`id` は各自の KV を作って設定する（プレースホルダのまま）
+  - `vite.config.ts`: `mode=server` ビルドは `cloudflareWorkersBuild`。dev は `@hono/vite-dev-server` の `cloudflareAdapter` で `c.env`（KV）を Miniflare 経由注入するので `npm run dev` でも KV が使える
   - `app/root-view.tsx`: HTML シェル。**Inertia の初期ページは `<script data-page="app" type="application/json">` の textContent で渡す**（v3 の `getInitialPageFromDOM` がこのセレクタで読む。`<div data-page>` 属性ではない）
   - `app/pages.gen.ts`: `@hono/inertia/vite` が自動生成（`PageProps<C>` の型元）。手編集・コミット禁止（gitignore 済み）
   - `src/client.tsx`: `createInertiaApp`（クライアントエントリ）
