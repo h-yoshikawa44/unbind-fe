@@ -9,24 +9,69 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { Sentence, TokenWithAnalysis } from '@/types';
 import { normalizeTags } from '@/types';
+import { storedSentencesSchema } from '@/schemas';
 
 const DATA_FILE = resolve(process.cwd(), 'data.json');
 
-async function loadAll(): Promise<Sentence[]> {
-  try {
-    const text = await readFile(DATA_FILE, 'utf-8');
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- data.json のデータを Sentence[] として信頼する（DB 導入時に検証へ差し替え）
-    const raw = JSON.parse(text) as Sentence[];
-    // 後から追加したフィールドは古いデータに存在しないため、既定値で補完する。
-    return raw.map((s) => ({
-      ...s,
-      naturalTranslation: s.naturalTranslation ?? '',
-      tags: s.tags ?? [],
-    }));
-  } catch {
-    // ファイルが無い / 壊れている場合は空データとして扱う。
-    return [];
+/** データ層のエラー種別ごとのユーザ向けメッセージ。 */
+export const DATA_ERROR_MESSAGES = {
+  // 読み込み自体に失敗した（ファイル I/O など想定外の失敗）。
+  read: 'データの取得に失敗しました',
+  // 読み込めたが中身が期待する形と違う（JSON 破損・スキーマ検証エラー）。
+  validation: '予期しないデータが取得されました',
+} as const;
+
+/**
+ * データ層で発生したユーザに提示すべきエラー。
+ * message にはそのまま画面表示できる日本語メッセージを持たせる。
+ */
+export class SentenceDataError extends Error {
+  kind: 'read' | 'validation';
+
+  constructor(kind: 'read' | 'validation') {
+    super(DATA_ERROR_MESSAGES[kind]);
+    this.name = 'SentenceDataError';
+    this.kind = kind;
   }
+}
+
+/** 任意のエラーを画面表示用メッセージへ変換する（想定外は取得失敗として扱う）。 */
+export function toDataErrorMessage(err: unknown): string {
+  return err instanceof SentenceDataError ? err.message : DATA_ERROR_MESSAGES.read;
+}
+
+/** Node の fs エラー（存在しないファイル）かどうかを判定する。 */
+function isFileNotFound(err: unknown): boolean {
+  return typeof err === 'object' && err !== null && 'code' in err && err.code === 'ENOENT';
+}
+
+async function loadAll(): Promise<Sentence[]> {
+  let text: string;
+  try {
+    text = await readFile(DATA_FILE, 'utf-8');
+  } catch (err) {
+    // ファイルが無い場合は空データ（初回保存前）として扱う。
+    if (isFileNotFound(err)) return [];
+    // それ以外の読み込み失敗は取得エラーとして通知する。
+    console.error('data.json の読み込みに失敗しました:', err);
+    throw new SentenceDataError('read');
+  }
+  // ここで検証して初めて Sentence[] とみなす（旧: JSON.parse を as で信頼していた箇所）。
+  // naturalTranslation / tags が無い古いデータはスキーマ側の既定値で補完される。
+  // JSON 破損・スキーマ不一致は握りつぶさず、検証エラーとして通知する。
+  let json: unknown;
+  try {
+    json = JSON.parse(text);
+  } catch (err) {
+    console.error('data.json のパースに失敗しました:', err);
+    throw new SentenceDataError('validation');
+  }
+  const result = storedSentencesSchema.safeParse(json);
+  if (!result.success) {
+    console.error('data.json がスキーマに一致しません:', result.error);
+    throw new SentenceDataError('validation');
+  }
+  return result.data;
 }
 
 async function saveAll(sentences: Sentence[]): Promise<void> {

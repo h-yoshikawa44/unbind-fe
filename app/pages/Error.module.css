@@ -1,0 +1,33 @@
+.errorPanel {
+  max-width: 640px;
+  margin: 48px auto;
+  padding: 32px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.errorTitle {
+  color: var(--danger);
+  margin-bottom: 12px;
+}
+
+.errorMessage {
+  margin-bottom: 24px;
+}
+
+.errorLink {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 20px;
+  border-radius: var(--radius-md);
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+}
+
+.errorLink:hover {
+  background: var(--accent-border);
+}
